@@ -1,0 +1,1714 @@
+YOUR TASK
+Given a recipe, generate TWO JSON files:
+- File 1: process.json (Game Mechanics)
+- File 2: taskTexts.json (Localization – German)
+
+================================================================================
+PHASE 1: LEARN FROM EXAMPLES (MANDATORY - DO NOT SKIP)
+================================================================================
+
+Before processing the new recipe, you MUST extract patterns from the provided examples.
+
+STEP 1A: ANALYZE TASK STRUCTURE PATTERNS
+For each example, examine the tasks array:
+
+1. **Field Usage Patterns:**
+   - Which fields appear together? (e.g., tasks with cursorBitmap also have...)
+   - Which fields are mutually exclusive?
+   - Which fields are required vs. optional?
+   
+2. **Naming Conventions:**
+   - How are task names constructed? (ingredient states, combinations, etc.)
+   - When are generic names used (e.g., "schuessel") vs. specific names?
+   - How do task names relate to their icons?
+
+3. **Position and Placement Rules:**
+   - When does a task have openPosition vs. donePosition vs. both?
+   - What are all the valid position values? (countertopLeftBottom, stoveRightBottom, etc.)
+   - When are customPositionOffsetMouse and customExtentOffsetMouse used?
+
+4. **Cursor and Interaction Fields:**
+   - When does a task need cursorBitmap vs. cursorHotspot vs. both vs. neither?
+   - What determines if a task can be "picked up" by the player?
+   - When is canHaveAlternativeDonePosition = "1" used?
+
+5. **Active State Rules:**
+   - When does a task have activeTime?
+   - What does activeToDone = "0" vs. activeToDone = "1" (or absence) mean?
+   - When does a task have activePosition?
+
+STEP 1B: ANALYZE TRANSITION PATTERNS
+For each example, examine the transitions array:
+
+1. **Transition Types:**
+   - Manual transitions (player drags sourceTask onto destTask)
+   - Auto transitions 
+   - When is each type used?
+
+2. **Transition Triggers:**
+   - What makes a transition manual vs. auto?
+   - Are auto transitions always used for specific scenarios (e.g., after cooking)?
+   - How many transitions can a single task have as source or destination?
+
+3. **Result Task Creation:**
+   - When does resultTask reference an existing task vs. create a new state?
+   - How are "intermediate states" handled (e.g., raw → cooked → combined)?
+
+STEP 1C: ANALYZE RECIPE-TO-TASK MAPPING
+For each example, trace how recipe steps map to tasks:
+
+1. **Single Recipe Step → Multiple Tasks Pattern:**
+   Document cases where one recipe instruction creates multiple tasks/transitions.
+   Example: "Tomaten waschen" → might need: tomaten (raw) → tomatenGewaschen → transitions
+
+2. **Preparation Sequences:**
+   How are multi-step preparations modeled?
+   Example: Ingredient → washed → chopped → added to bowl
+
+3. **Combination Logic:**
+   When multiple ingredients combine, how are tasks structured?
+   Example: Bowl + ingredient1 → bowlMitZutat1 + ingredient2 → bowlMitZutaten
+
+4. **Cooking/Heating Patterns:**
+   How are timed cooking actions modeled with activeTime and transitions?
+
+STEP 1D: ANALYZE TASKTEXTS STRUCTURE
+Examine how taskTexts.json entries correspond to process.json:
+
+1. **Key Naming Pattern:**
+   - How do info_XX, desc_XX, feed_XX numbers relate to tasks?
+   - When are sequential numbers used vs. gaps?
+
+2. **Description Types:**
+   - "descriptions" (info_XX): What kind of instructions do these contain?
+   - "titles" (desc_XX): How do these differ from descriptions?
+   - "feedbacks" (feed_XX): When are these used?
+   - "informations" (info_XX in informations array): What are these for?
+
+3. **Content Patterns:**
+   - How detailed should descriptions be?
+   - What verb tenses and sentence structures are used?
+   - How are multi-step actions described?
+
+================================================================================
+OUTPUT YOUR PATTERN ANALYSIS (MANDATORY)
+================================================================================
+
+Before processing the new recipe, you MUST output:
+
+**EXTRACTED PATTERNS SUMMARY:**
+
+1. Task Field Rules:
+   [List discovered rules about when fields are required/optional]
+
+2. Transition Rules:
+   [List discovered rules about manual vs. auto transitions]
+
+3. Recipe Mapping Rules:
+   [List discovered rules about how recipe steps become tasks]
+
+4. TaskTexts Rules:
+   [List discovered rules about key naming and content]
+
+5. Common Task Categories:
+   [List reusable task types found across examples: bowls, pots, ingredients in various states, etc.]
+
+================================================================================
+PHASE 2: ANALYZE NEW RECIPE (MANDATORY - STEP BY STEP)
+================================================================================
+
+Now analyze the new recipe input step by step:
+
+STEP 2A: RECIPE BREAKDOWN
+List each recipe step with explicit analysis:
+
+For each recipe step:
+```
+Recipe Step [N]: [exact text from recipe]
+
+Required Player Actions:
+- [ ] Action 1
+- [ ] Action 2
+
+Ingredients Involved:
+- Ingredient A (initial state: X, final state: Y)
+- Ingredient B (initial state: X, final state: Y)
+
+Task Sequence Required:
+1. Task name: [name] (reason: [why this task is needed])
+2. Task name: [name] (reason: [why this task is needed])
+...
+
+Transitions Required:
+1. [sourceTask] → [destTask] = [resultTask] (type: manual/auto, reason: [why])
+2. [sourceTask] → [destTask] = [resultTask] (type: manual/auto, reason: [why])
+...
+```
+
+STEP 2B: TASK INVENTORY
+Create a complete inventory of all tasks needed:
+
+```
+[Task Name]
+- Purpose: [what this represents]
+- Reuses common asset: [yes/no - which one]
+- Required fields: [list with reasons]
+- Used in recipe steps: [step numbers]
+- Transitions: [as source: X times, as destination: Y times]
+```
+
+STEP 2C: VALIDATE COMPLETENESS
+Check that every recipe step has corresponding tasks and transitions:
+- [ ] Step 1: covered by tasks [list] and transitions [list]
+- [ ] Step 2: covered by tasks [list] and transitions [list]
+...
+
+================================================================================
+PHASE 3: GENERATE JSON FILES
+================================================================================
+
+STEP 3A: Generate process.json
+- Follow the exact structure from examples
+- Apply the patterns you documented in Phase 1
+- Include all required fields based on your analysis
+
+STEP 3B: Generate taskTexts.json
+- Follow the exact structure from examples
+- Use sequential numbering for info/desc/feed keys
+- Write clear, imperative German instructions
+- Match the writing style from examples
+
+================================================================================
+OUTPUT ORDER (STRICT)
+================================================================================
+
+1. **EXTRACTED PATTERNS SUMMARY** (from Phase 1)
+2. **RECIPE BREAKDOWN** (from Phase 2A)
+3. **TASK INVENTORY** (from Phase 2B)
+4. **VALIDATION CHECKLIST** (from Phase 2C)
+5. **process.json** (complete file)
+6. **taskTexts.json** (complete file)
+
+================================================================================
+CRITICAL RULES
+================================================================================
+
+- NEVER skip the analysis phases
+- NEVER generate JSON without showing your reasoning
+- NEVER assume - if uncertain about a pattern, state it explicitly
+- ALWAYS validate that every recipe step is covered
+- ALWAYS explain WHY you chose manual vs. auto transitions
+- ALWAYS explain WHY you included specific fields in tasks
+
+================================================================================
+EXAMPLES FOLLOW BELOW
+================================================================================
+
+EXAMPLE 1: 
+
+Recipe input:
+Tomaten Mozarella-Speiße
+
+(für 4 Personen)
+
+20 Mozzarellakugeln (ca. 160 g)
+2 TL Pesto à la Genovese
+20 rote Cherrytomaten (ca. 250 g)
+20 Basilikumblätter
+Meersalz
+Pfeffer aus der Mühle
+1-2 EL Olivenöl
+
+
+Für das Pesto:
+
+2 Bund Basilikum
+3 EL Pinienkerne und Walnüsse gemischt
+2 Knoblauchzehen
+80 g frisch geriebener Parmesan
+4 EL gutes kaltgepresstes Olivenöl
+1 Spritzer Limettensaft
+
+
+1. Das Basilikum waschen und trocken tupfen. Alle Zutaten für das Pesto in einem Mixer fein pürieren. Evtl. mit heißem Wasser oder Gemüsesud verlängern. 
+2. Die abgetropften Mozzarellakugeln mit Pesto bestreichen und auf je einen Cocktailspieß stecken. 
+3. Cherrytomaten mit kochendem Wasser übergießen, kalt abschrecken und häuten. Mit je einem Basilikumblatt umhüllen und dazuspießen.
+4. Die fertigen Spieße mit Salz und Pfeffer würzen und mit Olivenöl bestreichen.
+
+Sarahs Tipp:
+Dieses Pesto passt auch hervorragend zu Nudeln. Wer keine Mozzarellakugeln bekommt, nimmt ein großes Stück Mozzarella und schneidet es in möglichst gleich große Würfel.
+
+
+
+Process.json:
+
+{"tasks": [{
+	"name": "mozzarellakugelMitKlecks",
+	"info": "info_14",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "7 50",
+	"description": "desc_14",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/mozzarellakugelMitKlecks",
+	"donePosition": "countertopLeftBottom",
+	"customExtentOffsetMouse": "-16 -85"
+}, {
+	"name": "schuessel",
+	"info": "info_08",
+	"customPositionOffsetMouse": "17 33",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "common/schuessel_rot",
+	"customExtentOffsetMouse": "-34 -67",
+	"description": "desc_08"
+}, {
+	"name": "basilikumAbgeschnitten",
+	"info": "info_00c",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00c",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "cherrytomateAbgeschreckt",
+	"info": "info_24",
+	"openIcon": "0101/tomateUeberbrueht",
+	"description": "desc_24",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0101/tomateUeberbrueht_cursor"
+}, {
+	"name": "parmesan",
+	"info": "info_04",
+	"openIcon": "common/parmesan",
+	"description": "desc_04",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/parmesan_cursor"
+}, {
+	"name": "limettensaft",
+	"info": "info_07",
+	"openIcon": "common/limettensaft",
+	"description": "desc_07",
+	"cursorBitmap": "common/limettensaft_cursor"
+}, {
+	"name": "olivenoel",
+	"info": "info_06",
+	"cursorHotspot": "20 25",
+	"openIcon": "common/oel",
+	"description": "desc_06",
+	"cursorBitmap": "common/oel_cursor"
+}, {
+	"name": "schuesselMitZutaten",
+	"info": "info_09",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "17 33",
+	"description": "desc_09",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "0101/schuessel_rotMitZutaten",
+	"donePosition": "countertopRightBottom",
+	"customExtentOffsetMouse": "-34 -67"
+}, {
+	"name": "basilikumGewaschen",
+	"info": "info_00a",
+	"openIcon": "common/basilikumBlaetterNass",
+	"description": "desc_00a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumBlaetterNass_cursor"
+}, {
+	"name": "leeresTask",
+	"info": "info_25a",
+	"hoverBitmap": "leeresTaskCuttingboard",
+	"openIcon": "common/leeresTask",
+	"openPosition": "cuttingboard",
+	"description": "desc_25a"
+}, {
+	"name": "spiess",
+	"info": "info_16",
+	"openIcon": "0101/spiess",
+	"description": "desc_16",
+	"cursorBitmap": "0101/spiess_cursor"
+}, {
+	"name": "basilikumGetrocknet",
+	"info": "info_00b",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00b",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "spiessMitMozzarellakugel",
+	"info": "info_17",
+	"customPositionOffsetMouse": "7 50",
+	"speech": "0101_feedback_01",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugel",
+	"feedback": "feed_01",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_17"
+}, {
+	"name": "mozzarellakugelAufTeller",
+	"info": "info_13",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/mozzarellakugelTeller",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_13"
+}, {
+	"name": "pestoFertig",
+	"info": "info_10",
+	"cursorHotspot": "20 90",
+	"customPositionOffsetMouse": "17 33",
+	"description": "desc_10",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "0101/schuessel_rotMitPesto",
+	"donePosition": "countertopRightBottom",
+	"speech": "0101_feedback_00",
+	"cursorBitmap": "0101/schuessel_rotMitPesto_cursor",
+	"customExtentOffsetMouse": "-34 -67",
+	"feedback": "feed_00"
+}, {
+	"name": "spiessFertig",
+	"info": "info_32",
+	"openIcon": "0101/spiessKugelTomateGewuerztOel",
+	"description": "desc_32",
+	"openPosition": "countertopLeftBottom"
+}, {
+	"name": "limetten",
+	"info": "info_07a",
+	"openIcon": "common/limetteEinzelnHalbiert",
+	"description": "desc_07a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/limetteEinzelnHalbiert_cursor"
+}, {
+	"name": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"info": "info_31",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugelTomateGewuerzt",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_31"
+}, {
+	"name": "mozzarellakugelBestrichen",
+	"info": "info_15",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/kugelPesto",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_15"
+}, {
+	"name": "cherrytomate",
+	"info": "info_21",
+	"openIcon": "common/tomateCherryZweig",
+	"description": "desc_21",
+	"cursorBitmap": "common/tomateCherryZweig_cursor"
+}, {
+	"name": "cherrytomateGehaeutet",
+	"info": "info_25",
+	"openIcon": "0101/tomateGehaeutet",
+	"description": "desc_25",
+	"cursorBitmap": "0101/tomateGehaeutet_cursor"
+}, {
+	"name": "parmesanGerieben",
+	"info": "info_05",
+	"openIcon": "common/parmesanGerieben",
+	"description": "desc_05",
+	"cursorBitmap": "common/parmesanGerieben_cursor"
+}, {
+	"name": "cherrytomateGewaschen",
+	"info": "info_21a",
+	"openIcon": "common/tomateCherryZweigGewaschen",
+	"description": "desc_21a",
+	"cursorBitmap": "common/tomateCherryZweigGewaschen_cursor"
+}, {
+	"name": "knoblauchzehe",
+	"info": "info_02",
+	"openIcon": "common/knoblauchzehe",
+	"description": "desc_02",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchzehe_cursor"
+}, {
+	"name": "knoblauchAbgezogen",
+	"info": "info_03",
+	"openIcon": "common/knoblauchAbgezogen",
+	"description": "desc_03",
+	"cursorBitmap": "common/knoblauchAbgezogen_cursor"
+}, {
+	"name": "topfMitWasser",
+	"info": "info_19",
+	"customPositionOffsetMouse": "10 33",
+	"activeTime": "30",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveRightBottom",
+	"description": "desc_19",
+	"openIcon": "common/topf1MitWasserHeiss",
+	"customExtentOffsetMouse": "-20 -70",
+	"activeToDone": "0"
+}, {
+	"name": "spiessMitMozzarellakugelUndTomate",
+	"info": "info_28",
+	"customPositionOffsetMouse": "7 50",
+	"speech": "0101_feedback_01",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugelTomate",
+	"feedback": "feed_01",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_28"
+}, {
+	"name": "topf",
+	"info": "info_18",
+	"cursorHotspot": "90 80",
+	"openIcon": "common/topf1_leer",
+	"description": "desc_18",
+	"hoverBitmap": "topf1",
+	"customPositionOffsetMouse": "10 33",
+	"unopenedToOpen": "1",
+	"donePosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-20 -70",
+	"cursorBitmap": "common/topf1_leer_cursor"
+}, {
+	"name": "basilikumBlatt",
+	"info": "info_26",
+	"openIcon": "common/basilikumBlatt",
+	"description": "desc_26",
+	"cursorBitmap": "common/basilikumBlatt_cursor"
+}, {
+	"name": "teller",
+	"info": "info_11",
+	"customPositionOffsetMouse": "7 50",
+	"openIcon": "0101/tellerLeer",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_11"
+}, {
+	"name": "cherrytomateGehaeutetAufCuttingboard",
+	"info": "info_25b",
+	"description": "desc_25b",
+	"openIcon": "0101/tomateGehaeutet",
+	"openPosition": "cuttingboard",
+	"cursorBitmap": "0101/tomateGehaeutet_cursor"
+}, {
+	"name": "mozzarellakugel",
+	"info": "info_12",
+	"openIcon": "0101/mozzarellakugel",
+	"description": "desc_12",
+	"cursorBitmap": "0101/mozzarellakugel_cursor"
+}, {
+	"name": "topfMitKochendemWasser",
+	"info": "info_20",
+	"customPositionOffsetMouse": "10 33",
+	"openSound": "wasserKochen",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf1",
+	"openIcon": "common/topf1MitWasserHeiss",
+	"customExtentOffsetMouse": "-20 -70",
+	"description": "desc_20"
+}, {
+	"name": "pinienkerneWalnuesse",
+	"info": "info_01",
+	"openIcon": "0101/pinienkerneWalnuesse",
+	"description": "desc_01",
+	"cursorBitmap": "0101/pinienkerneWalnuesse_cursor"
+}, {
+	"name": "basilikum",
+	"info": "info_00",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "cherrytomateMitBasilikum",
+	"info": "info_27",
+	"openIcon": "0101/tomateBasilikum",
+	"description": "desc_27",
+	"cursorBitmap": "0101/tomateBasilikum_cursor"
+}, {
+	"name": "salz",
+	"info": "info_29",
+	"openIcon": "common/salz",
+	"description": "desc_29",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "topfMitTomaten",
+	"info": "info_22",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "10 33",
+	"description": "desc_22",
+	"hoverBitmap": "topf1",
+	"openIcon": "0101/topf1MitTomaten",
+	"doneSound": "wasserKochen",
+	"donePosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-20 -70"
+}, {
+	"name": "cherrytomateUeberbrueht",
+	"info": "info_23",
+	"openIcon": "0101/tomateUeberbrueht",
+	"description": "desc_23",
+	"cursorBitmap": "0101/tomateUeberbrueht_cursor"
+}, {
+	"name": "pfeffer",
+	"info": "info_30",
+	"openIcon": "common/pfeffer",
+	"description": "desc_30",
+	"cursorBitmap": "common/pfeffer_cursor"
+}
+], "transitions": [{
+	"name": "transition (move_02)",
+	"parent": "knoblauchAbgezogen",
+	"child": "schuessel",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0101/additive_knoblauch"
+}, {
+	"name": "transition (auto_00)",
+	"parent": "schuessel",
+	"child": "schuesselMitZutaten",
+	"lob": "2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_04)",
+	"parent": "olivenoel",
+	"child": "schuessel",
+	"sound": "oel",
+	"additiveOpenIcon": "0101/additive_oel"
+}, {
+	"name": "transition (auto_05)",
+	"parent": "topfMitWasser",
+	"child": "topfMitKochendemWasser",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_14)",
+	"parent": "olivenoel",
+	"child": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"sound": "oel"
+}, {
+	"name": "transition (abschrecken_00)",
+	"parent": "cherrytomateUeberbrueht",
+	"child": "cherrytomateAbgeschreckt",
+	"tool": "watertap"
+}, {
+	"name": "transition (move_00)",
+	"parent": "basilikumAbgeschnitten",
+	"child": "schuessel",
+	"sound": "zutatPulvrig",
+	"additiveOpenIcon": "0101/additive_basilikum"
+}, {
+	"name": "transition (wasserEinfuellen_00)",
+	"parent": "topf",
+	"child": "topfMitWasser",
+	"tool": "watertap"
+}, {
+	"name": "transition (auto_04)",
+	"parent": "mozzarellakugelBestrichen",
+	"child": "spiessMitMozzarellakugel",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_10)",
+	"parent": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"child": "spiessFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (move_12)",
+	"parent": "salz",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0101/additive_salz"
+}, {
+	"name": "transition (auto_06)",
+	"parent": "topfMitKochendemWasser",
+	"child": "topfMitTomaten",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_08)",
+	"parent": "spiessMitMozzarellakugel",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"lob": "2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (abschneiden_00)",
+	"parent": "basilikumGetrocknet",
+	"child": "basilikumBlatt",
+	"tool": "schere",
+	"minigameAction": "leftRight",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (move_08)",
+	"parent": "spiess",
+	"child": "mozzarellakugelBestrichen",
+	"sound": "aufspiessen"
+}, {
+	"name": "transition (move_06)",
+	"parent": "mozzarellakugel",
+	"child": "teller",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (abtrocknen_00)",
+	"parent": "basilikumGewaschen",
+	"child": "basilikumGetrocknet",
+	"tool": "papierrolle",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "30"
+}, {
+	"name": "transition (waschen_01)",
+	"parent": "cherrytomate",
+	"child": "cherrytomateGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (auto_02)",
+	"parent": "teller",
+	"child": "mozzarellakugelAufTeller",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_10)",
+	"parent": "basilikumBlatt",
+	"child": "cherrytomateGehaeutetAufCuttingboard",
+	"sound": "blumeAufQuiche"
+}, {
+	"name": "transition (auto_07)",
+	"parent": "cherrytomateGehaeutetAufCuttingboard",
+	"child": "cherrytomateMitBasilikum",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_12)",
+	"parent": "basilikumBlatt",
+	"child": "basilikumAbgeschnitten",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_03)",
+	"parent": "mozzarellakugelAufTeller",
+	"child": "mozzarellakugelMitKlecks",
+	"automatic": "1"
+}, {
+	"name": "transition (move_15)",
+	"parent": "cherrytomateGehaeutet",
+	"child": "leeresTask"
+}, {
+	"name": "transition (move_03)",
+	"parent": "parmesanGerieben",
+	"child": "schuessel",
+	"sound": "zutatPulvrig",
+	"additiveOpenIcon": "0101/additive_parmesan"
+}, {
+	"name": "transition (reiben_01)",
+	"parent": "parmesan",
+	"child": "parmesanGerieben",
+	"tool": "reibe",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (move_01)",
+	"parent": "pinienkerneWalnuesse",
+	"child": "schuessel",
+	"sound": "zutatNuesse",
+	"additiveOpenIcon": "0101/additive_pinienkWalnuesse"
+}, {
+	"name": "transition (auto_11)",
+	"parent": "leeresTask",
+	"child": "cherrytomateGehaeutetAufCuttingboard",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_11)",
+	"parent": "cherrytomateMitBasilikum",
+	"child": "spiessMitMozzarellakugel",
+	"sound": "aufspiessen"
+}, {
+	"name": "transition (move_07)",
+	"parent": "pestoFertig",
+	"child": "mozzarellakugelAufTeller",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (move_13)",
+	"parent": "pfeffer",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0101/additive_pfeffer"
+}, {
+	"name": "transition (auto_09)",
+	"parent": "spiessMitMozzarellakugelUndTomate",
+	"child": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_09)",
+	"parent": "cherrytomateGewaschen",
+	"child": "topfMitKochendemWasser",
+	"sound": "wasserWurf"
+}, {
+	"name": "transition (pressen_00)",
+	"parent": "limetten",
+	"child": "limettensaft",
+	"tool": "presse",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "40"
+}, {
+	"name": "transition (bestreichen_00)",
+	"parent": "mozzarellakugelMitKlecks",
+	"child": "mozzarellakugelBestrichen",
+	"minigameMaxScore": "30",
+	"mandatory": "1",
+	"tool": "pinsel",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "countertopLeftBottom",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "basilikum",
+	"child": "basilikumGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (abziehen_00)",
+	"parent": "knoblauchzehe",
+	"child": "knoblauchAbgezogen",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (haeuten_00)",
+	"parent": "cherrytomateAbgeschreckt",
+	"child": "cherrytomateGehaeutet",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "20",
+	"mandatory": "1",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (rausholen_00)",
+	"parent": "topfMitTomaten",
+	"child": "cherrytomateUeberbrueht",
+	"tool": "schaumkelle"
+}, {
+	"name": "transition (puerieren_00)",
+	"parent": "schuesselMitZutaten",
+	"child": "pestoFertig",
+	"tool": "puerierstab",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "countertopRightBottom",
+	"minigameMaxScore": "40"
+}, {
+	"name": "transition (move_05)",
+	"parent": "limettensaft",
+	"child": "schuessel",
+	"sound": "zutatFluessig",
+	"additiveOpenIcon": "0101/additive_limettensaft"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Basilikum"
+		},{
+			"key" : "desc_00a",
+			"value" : "Gewaschenes Basilikum"
+		},{
+			"key" : "desc_00b",
+			"value" : "Abgetrocknetes Basilikum"
+		},{
+			"key" : "desc_00c",
+			"value" : "Basilikum für das Pesto"
+		},{
+			"key" : "desc_01",
+			"value" : "Pinienkerne und Walnüsse"
+		},{
+			"key" : "desc_02",
+			"value" : "Knoblauchzehe"
+		},{
+			"key" : "desc_03",
+			"value" : "Abgezogener Knoblauch"
+		},{
+			"key" : "desc_04",
+			"value" : "Parmesan"
+		},{
+			"key" : "desc_05",
+			"value" : "Geriebener Parmesan"
+		},{
+			"key" : "desc_06",
+			"value" : "Olivenöl"
+		},{
+			"key" : "desc_07",
+			"value" : "Limettensaft"
+		},{
+			"key" : "desc_07a",
+			"value" : "Limetten"
+		},{
+			"key" : "desc_08",
+			"value" : "Schüssel für das Pesto"
+		},{
+			"key" : "desc_09",
+			"value" : "Schüssel mit Zutaten für das Pesto"
+		},{
+			"key" : "desc_10",
+			"value" : "Fertiges Pesto"
+		},{
+			"key" : "desc_11",
+			"value" : "Teller"
+		},{
+			"key" : "desc_12",
+			"value" : "Mozzarellakugel"
+		},{
+			"key" : "desc_13",
+			"value" : "Mozzarellakugel"
+		},{
+			"key" : "desc_14",
+			"value" : "Mozzarellakugel mit Pesto"
+		},{
+			"key" : "desc_15",
+			"value" : "Mit Pesto bestrichene Mozzarellakugel"
+		},{
+			"key" : "desc_16",
+			"value" : "Cocktailspieß"
+		},{
+			"key" : "desc_17",
+			"value" : "Spieß mit Mozzarellakugel"
+		},{
+			"key" : "desc_18",
+			"value" : "Topf"
+		},{
+			"key" : "desc_19",
+			"value" : "Topf mit Wasser"
+		},{
+			"key" : "desc_20",
+			"value" : "Topf mit kochendem Wasser"
+		},{
+			"key" : "desc_21",
+			"value" : "Cherrytomaten"
+		},{
+			"key" : "desc_21a",
+			"value" : "Gewaschene Cherrytomaten"
+		},{
+			"key" : "desc_22",
+			"value" : "Topf mit Tomaten"
+		},{
+			"key" : "desc_23",
+			"value" : "Überbrühte Cherrytomate"
+		},{
+			"key" : "desc_24",
+			"value" : "Abgeschreckte Cherrytomate"
+		},{
+			"key" : "desc_25",
+			"value" : "Gehäutete Cherrytomate"
+		},{
+			"key" : "desc_25a",
+			"value" : "Schneidebrett"
+		},{
+			"key" : "desc_25b",
+			"value" : "Gehäutete Cherrytomate"
+		},{
+			"key" : "desc_26",
+			"value" : "Basilikumblatt für den Spieß"
+		},{
+			"key" : "desc_27",
+			"value" : "Cherrytomate mit Basilikum"
+		},{
+			"key" : "desc_28",
+			"value" : "Spieß mit Mozzarellakugel und Tomate"
+		},{
+			"key" : "desc_29",
+			"value" : "Salz"
+		},{
+			"key" : "desc_30",
+			"value" : "Pfeffer"
+		},{
+			"key" : "desc_31",
+			"value" : "Spieß mit Mozzarellakugel, Tomate und Gewürzen"
+		},{
+			"key" : "desc_32",
+			"value" : "Fertiger Tomate-Mozzarella-Spieß"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Das Basilikum wird erst mal gewaschen."
+		},{
+			"key" : "info_00a",
+			"value" : "Nun das Basilikum mit Küchenpapier trocken tupfen."
+		},{
+			"key" : "info_00b",
+			"value" : "Vom Basilikum ein Blatt für den Spieß abschneiden."
+		},{
+			"key" : "info_00c",
+			"value" : "Das Basilikum in die Schüssel geben."
+		},{
+			"key" : "info_01",
+			"value" : "Beides in die Schüssel geben."
+		},{
+			"key" : "info_02",
+			"value" : "Der Knoblauch wird mit dem Messer abgezogen."
+		},{
+			"key" : "info_03",
+			"value" : "Den abgezogenen Knoblauch in die Schüssel geben."
+		},{
+			"key" : "info_04",
+			"value" : "Der Parmesan wird gerieben."
+		},{
+			"key" : "info_05",
+			"value" : "Den geriebenen Parmesan in die Schüssel geben."
+		},{
+			"key" : "info_06",
+			"value" : "Das Olivenöl wird für das Pesto und für die Spieße verwendet."
+		},{
+			"key" : "info_07",
+			"value" : "Den Limettensaft in die Schüssel geben."
+		},{
+			"key" : "info_07a",
+			"value" : "Die Limette mit der Zitronenpresse auspressen."
+		},{
+			"key" : "info_08",
+			"value" : "Basilikum, Pinienkerne und Walnüsse, Knoblauchzehen, frisch geriebenen Parmesan, Olivenöl und Limettensaft hineingeben."
+		},{
+			"key" : "info_09",
+			"value" : "Die Zutaten werden nun fein püriert."
+		},{
+			"key" : "info_10",
+			"value" : "Etwas Pesto auf eine Mozzarellakugel geben."
+		},{
+			"key" : "info_11",
+			"value" : "Hier die Mozzarellakugel hinlegen, um sie mit dem Pesto zu bestreichen."
+		},{
+			"key" : "info_12",
+			"value" : "Die Mozzarellakugel auf den Teller legen, um sie mit dem Pesto zu bestreichen."
+		},{
+			"key" : "info_13",
+			"value" : "Etwas Pesto auf eine Mozzarellakugel geben."
+		},{
+			"key" : "info_14",
+			"value" : "Das Pesto wird mit einem Pinsel verstrichen."
+		},{
+			"key" : "info_15",
+			"value" : "Cocktailspieß in die Mozzarellakugel stecken."
+		},{
+			"key" : "info_16",
+			"value" : "Mozzarellakugel mit Pesto auf einen Cocktailspieß stecken."
+		},{
+			"key" : "info_17",
+			"value" : "Nun die mit einem Basilikumblatt umhüllte Tomate dazuspießen."
+		},{
+			"key" : "info_18",
+			"value" : "Wasser in den Topf einfüllen, um die Cherrytomaten zu überbrühen."
+		},{
+			"key" : "info_19",
+			"value" : "Wenn das Wasser kocht, können die Cherrytomaten hineingegeben werden."
+		},{
+			"key" : "info_20",
+			"value" : "Wenn das Wasser kocht, können die Cherrytomaten hineingegeben werden."
+		},{
+			"key" : "info_21",
+			"value" : "Die Cherrytomaten gründlich waschen."
+		},{
+			"key" : "info_21a",
+			"value" : "Die Cherrytomaten in das kochende Wasser geben."
+		},{
+			"key" : "info_22",
+			"value" : "Die Cherrytomaten mit der Schaumkelle aus dem Wasser nehmen."
+		},{
+			"key" : "info_23",
+			"value" : "Die überbrühte Cherrytomate unter kaltem Wasser abschrecken."
+		},{
+			"key" : "info_24",
+			"value" : "Die abgeschreckte Cherrytomate mit einem Messer häuten."
+		},{
+			"key" : "info_25",
+			"value" : "Auf das Schneidebrett legen und mit einem Basilikumblatt umhüllen."
+		},{
+			"key" : "info_25a",
+			"value" : "Hier wird die gehäutete Cherrytomate hingelegt."
+		},{
+			"key" : "info_25b",
+			"value" : "Mit einem Basilikumblatt umhüllen."
+		},{
+			"key" : "info_26",
+			"value" : "Die gehäutete Cherrytomate wird mit einem Basilikumblatt umhüllt."
+		},{
+			"key" : "info_27",
+			"value" : "Zur Mozzarellakugel dazuspießen."
+		},{
+			"key" : "info_28",
+			"value" : "Mit Salz und Pfeffer würzen."
+		},{
+			"key" : "info_29",
+			"value" : "Den fertigen Spieß mit Salz würzen."
+		},{
+			"key" : "info_30",
+			"value" : "Den fertigen Spieß mit Pfeffer würzen."
+		},{
+			"key" : "info_31",
+			"value" : "Mit Olivenöl bestreichen."
+		},{
+			"key" : "info_32",
+			"value" : ""
+		}
+	],
+	"informations": [
+		{
+			"key": "info_00",
+			"value": "basilikum_02"
+		},{
+			"key": "info_01",
+			"value": "pinienkerneWalnuesse_01"
+		},{
+			"key": "info_02",
+			"value": "knoblauch_03"
+		},{
+			"key": "info_04",
+			"value": "parmesan_01"
+		},{
+			"key": "info_06",
+			"value": "olivenoel_04"
+		},{
+			"key": "info_07a",
+			"value": "limetten_01"
+		},{
+			"key": "info_12",
+			"value": "mozzarella_01"
+		},{
+			"key": "info_13",
+			"value": "mozzarella_01"
+		},{
+			"key": "info_21",
+			"value": "cherrytomaten_01"
+		},{
+			"key": "info_29",
+			"value": "salz_02"
+		},{
+			"key": "info_30",
+			"value": "pfeffer_02"
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Das Pesto ist fertig.\nGut gemacht!"
+		},{
+			"key" : "feed_01",
+			"value" : "Super,\nder Spieß ist fertig.\nNun noch würzen und mit\nOlivenöl bestreichen."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	]
+}
+------
+
+EXAMPLE 2: 
+
+Recipe input: 
+Bruschetta
+
+(für 4-6 Personen)
+
+1 Baguette
+2 große Knoblauchzehen
+ca. 1/8 L Olivenöl
+7-8 mittelgroße reife Tomaten (ca. 700 g)
+3 Zweige Basilikum
+Meersalz
+Pfeffer aus der Mühle
+
+1. Baguette schräg in fingerbreite Scheiben schneiden, auf das Backblech legen und ca. 5 Minuten im Ofen rösten.
+2. Knoblauch abziehen, halbieren und mit der angeschnittenen Seite die Baguettescheiben einreiben. Anschließend mit 8-10 EL Olivenöl beträufeln.
+3. Tomaten waschen, entkernen und in Würfel schneiden. Auf die Brotscheiben verteilen.
+4. Basilikumblätter waschen und trocken tupfen, fein hacken und über die Tomaten streuen. Mit Salz und Pfeffer würzen. Mit dem restlichen Olivenöl beträufeln.
+
+Sarahs Tipp:
+Die Baguettescheiben lassen sich auch ganz einfach im Toaster rösten.
+
+Process.json:
+{"tasks": [{
+	"name": "knoblauchHalbiert",
+	"info": "info_13",
+	"openIcon": "common/knoblauchHalbiert",
+	"description": "desc_13",
+	"cursorBitmap": "common/knoblauchHalbiert_cursor"
+}, {
+	"name": "basilikumTrocken",
+	"info": "info_21",
+	"openIcon": "common/basilikumZweig",
+	"description": "desc_21",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumZweig_cursor"
+}, {
+	"name": "baguetteMitTomaten",
+	"info": "info_07",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitTomaten",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_07"
+}, {
+	"name": "olivenoel",
+	"info": "info_14",
+	"cursorHotspot": "20 25",
+	"openIcon": "common/oel",
+	"description": "desc_14",
+	"cursorBitmap": "common/oel_cursor"
+}, {
+	"name": "baguette",
+	"info": "info_00",
+	"openIcon": "0100/baguette",
+	"description": "desc_00",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0100/baguette_cursor"
+}, {
+	"name": "baguetteMitKnoblauch",
+	"info": "info_05",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitKnoblauch",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_05"
+}, {
+	"name": "bruschettaFertig",
+	"info": "info_10",
+	"openIcon": "0100/bruschettaFertig",
+	"description": "desc_10",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "blechMitBaguette",
+	"info": "info_03",
+	"cursorHotspot": "150 50",
+	"customPositionOffsetMouse": "20 135",
+	"activeToDone": "0",
+	"activeIcon": "0100/blechMitBaguette_small",
+	"activePosition": "oven",
+	"openIcon": "0100/blechMitBaguette",
+	"activeTime": "22",
+	"openPosition": "countertopRightBottom",
+	"cursorBitmap": "0100/blechMitBaguette_cursor",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_03"
+}, {
+	"name": "tomateGewaschen",
+	"info": "info_16",
+	"openIcon": "common/tomateGewaschen",
+	"description": "desc_16",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomateGewaschen_cursor"
+}, {
+	"name": "basilikumGehackt",
+	"info": "info_22",
+	"openIcon": "common/basilikumGehackt",
+	"description": "desc_22",
+	"cursorBitmap": "common/basilikumGehackt_cursor"
+}, {
+	"name": "tomateGewuerfelt",
+	"info": "info_18",
+	"speech": "0100_feedback_01",
+	"feedback": "feed_01",
+	"openIcon": "common/tomateGewuerfelt",
+	"cursorBitmap": "common/tomateGewuerfelt_cursor",
+	"description": "desc_18"
+}, {
+	"name": "baguetteGeschnitten",
+	"info": "info_01",
+	"speech": "0100_feedback_00",
+	"feedback": "feed_00",
+	"openIcon": "0100/baguetteGeschnitten",
+	"cursorBitmap": "0100/baguetteGeschnitten_cursor",
+	"description": "desc_01"
+}, {
+	"name": "knoblauchzehe",
+	"info": "info_11",
+	"openIcon": "common/knoblauchzehe",
+	"description": "desc_11",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchzehe_cursor"
+}, {
+	"name": "basilikumGewaschen",
+	"info": "info_20",
+	"openIcon": "common/basilikumZweigGewaschen",
+	"description": "desc_20",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumZweigGewaschen_cursor"
+}, {
+	"name": "blech",
+	"info": "info_02",
+	"customPositionOffsetMouse": "20 135",
+	"openIcon": "common/blech",
+	"openPosition": "countertopRightBottom",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_02"
+}, {
+	"name": "baguetteGeroestet",
+	"info": "info_04",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteGeroestet",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_04"
+}, {
+	"name": "bruschetta",
+	"info": "info_08",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/bruschetta",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_08"
+}, {
+	"name": "basilikumZweig",
+	"info": "info_19",
+	"openIcon": "common/basilikumZweig",
+	"description": "desc_19",
+	"cursorBitmap": "common/basilikumZweig_cursor"
+}, {
+	"name": "tomate",
+	"info": "info_15",
+	"openIcon": "common/tomate",
+	"description": "desc_15",
+	"cursorBitmap": "common/tomate_cursor"
+}, {
+	"name": "bruschettaGewuerzt",
+	"info": "info_09",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/bruschettaGewuerzt",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_09"
+}, {
+	"name": "pfeffer",
+	"info": "info_24",
+	"openIcon": "common/pfeffer",
+	"description": "desc_24",
+	"cursorBitmap": "common/pfeffer_cursor"
+}, {
+	"name": "salz",
+	"info": "info_23",
+	"openIcon": "common/salz",
+	"description": "desc_23",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "tomateEntkernt",
+	"info": "info_17",
+	"openIcon": "common/tomateEntkernt",
+	"description": "desc_17",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomateEntkernt_cursor"
+}, {
+	"name": "baguetteMitOel",
+	"info": "info_06",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitOel",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_06"
+}, {
+	"name": "knoblauchAbgezogen",
+	"info": "info_12",
+	"openIcon": "common/knoblauchAbgezogen",
+	"description": "desc_12",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchAbgezogen_cursor"
+}
+], "transitions": [{
+	"name": "transition (move_02)",
+	"parent": "olivenoel",
+	"child": "baguetteMitKnoblauch",
+	"sound": "oel"
+}, {
+	"name": "transition (auto_06)",
+	"parent": "bruschettaGewuerzt",
+	"child": "bruschettaFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (wuerfeln_00)",
+	"parent": "tomateEntkernt",
+	"child": "tomateGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (auto_02)",
+	"parent": "baguetteMitKnoblauch",
+	"child": "baguetteMitOel",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_06)",
+	"parent": "pfeffer",
+	"child": "bruschetta",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0100/additive_pfeffer"
+}, {
+	"name": "transition (schneiden_00)",
+	"parent": "baguette",
+	"child": "baguetteGeschnitten",
+	"sound": "brotSchneiden",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (move_04)",
+	"parent": "basilikumGehackt",
+	"child": "baguetteMitTomaten",
+	"sound": "wuerzen"
+}, {
+	"name": "transition (trockentupfen_00)",
+	"parent": "basilikumGewaschen",
+	"child": "basilikumTrocken",
+	"tool": "papierrolle",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "30"
+}, {
+	"name": "transition (auto_00)",
+	"parent": "blech",
+	"child": "blechMitBaguette",
+	"automatic": "1"
+}, {
+	"name": "transition (move_03)",
+	"parent": "tomateGewuerfelt",
+	"child": "baguetteMitOel",
+	"sound": "zutatMatschig",
+	"lob": "2"
+}, {
+	"name": "transition (waschen_01)",
+	"parent": "basilikumZweig",
+	"child": "basilikumGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move_01)",
+	"parent": "blechMitBaguette",
+	"child": "baguetteGeroestet",
+	"mandatory": "1"
+}, {
+	"name": "transition (move_00)",
+	"parent": "baguetteGeschnitten",
+	"child": "blech",
+	"sound": "etwasAufsBlech"
+}, {
+	"name": "transition (auto_04)",
+	"parent": "baguetteMitTomaten",
+	"child": "bruschetta",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_01)",
+	"parent": "baguetteGeroestet",
+	"child": "baguetteMitKnoblauch",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (einreiben_00)",
+	"parent": "knoblauchHalbiert",
+	"child": "baguetteGeroestet",
+	"sound": "wuerzen",
+	"lob": "2"
+}, {
+	"name": "transition (hacken_00)",
+	"parent": "basilikumTrocken",
+	"child": "basilikumGehackt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (auto_05)",
+	"parent": "bruschetta",
+	"child": "bruschettaGewuerzt",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_05)",
+	"parent": "salz",
+	"child": "bruschetta",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0100/additive_salz"
+}, {
+	"name": "transition (entkernen_00)",
+	"parent": "tomateGewaschen",
+	"child": "tomateEntkernt",
+	"sound": "entkernen",
+	"minigameMaxScore": "30",
+	"tool": "messer",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (halbieren_00)",
+	"parent": "knoblauchAbgezogen",
+	"child": "knoblauchHalbiert",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "tomate",
+	"child": "tomateGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (abziehen_00)",
+	"parent": "knoblauchzehe",
+	"child": "knoblauchAbgezogen",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "40",
+	"tool": "messer",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (move_07)",
+	"parent": "olivenoel",
+	"child": "bruschettaGewuerzt",
+	"sound": "oel"
+}, {
+	"name": "transition (auto_03)",
+	"parent": "baguetteMitOel",
+	"child": "baguetteMitTomaten",
+	"mandatory": "1",
+	"automatic": "1"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Baguette"
+		},{
+			"key" : "desc_01",
+			"value" : "Baguettescheiben"
+		},{
+			"key" : "desc_02",
+			"value" : "Blech"
+		},{
+			"key" : "desc_03",
+			"value" : "Blech mit Baguette"
+		},{
+			"key" : "desc_04",
+			"value" : "Geröstete Baguettescheiben"
+		},{
+			"key" : "desc_05",
+			"value" : "Baguette mit Knoblauch"
+		},{
+			"key" : "desc_06",
+			"value" : "Baguette mit Öl"
+		},{
+			"key" : "desc_07",
+			"value" : "Baguette mit Tomaten"
+		},{
+			"key" : "desc_08",
+			"value" : "Bruschetta"
+		},{
+			"key" : "desc_09",
+			"value" : "Bruschetta mit Salz und Pfeffer"
+		},{
+			"key" : "desc_10",
+			"value" : "Fertige Bruschetta"
+		},{
+			"key" : "desc_11",
+			"value" : "Knoblauchzehe"
+		},{
+			"key" : "desc_12",
+			"value" : "Abgezogene Knoblauchzehe"
+		},{
+			"key" : "desc_13",
+			"value" : "Halbierte Knoblauchzehe"
+		},{
+			"key" : "desc_14",
+			"value" : "Olivenöl"
+		},{
+			"key" : "desc_15",
+			"value" : "Tomate"
+		},{
+			"key" : "desc_16",
+			"value" : "Gewaschene Tomate"
+		},{
+			"key" : "desc_17",
+			"value" : "Entkernte Tomate"
+		},{
+			"key" : "desc_18",
+			"value" : "Gewürfelte Tomate"
+		},{
+			"key" : "desc_19",
+			"value" : "Basilikumzweige"
+		},{
+			"key" : "desc_20",
+			"value" : "Gewaschenes Basilikum"
+		},{
+			"key" : "desc_21",
+			"value" : "Abgetrocknetes Basilikum"
+		},{
+			"key" : "desc_22",
+			"value" : "Gehacktes Basilikum"
+		},{
+			"key" : "desc_23",
+			"value" : "Salz"
+		},{
+			"key" : "desc_24",
+			"value" : "Pfeffer"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Das Baguette in Scheiben schneiden."
+		},{
+			"key" : "info_01",
+			"value" : "Die Baguettescheiben auf das Backblech legen."
+		},{
+			"key" : "info_02",
+			"value" : "Die Baguettescheiben auf das Backblech legen."
+		},{
+			"key" : "info_03",
+			"value" : "Die Baguettescheiben werden im Ofen geröstet."
+		},{
+			"key" : "info_04",
+			"value" : "Eine halbe Knoblauchzehe auf den gerösteten Baguettescheiben verreiben."
+		},{
+			"key" : "info_05",
+			"value" : "Nun wird etwas Öl auf den Baguettescheiben verteilt."
+		},{
+			"key" : "info_06",
+			"value" : "Die gewürfelten Tomaten auf den Baguettescheiben verteilen."
+		},{
+			"key" : "info_07",
+			"value" : "Jetzt kann das gehackte Basilikum über die Tomaten gestreut werden."
+		},{
+			"key" : "info_08",
+			"value" : "Die Bruschetta mit Salz und Pfeffer würzen."
+		},{
+			"key" : "info_09",
+			"value" : "Zum Schluss noch etwas Olivenöl über die Bruschetta geben."
+		},{
+			"key" : "info_10",
+			"value" : "Guten Appetit."
+		},{
+			"key" : "info_11",
+			"value" : "Den Knoblauch mit einem Messer abziehen."
+		},{
+			"key" : "info_12",
+			"value" : "Die Knoblauchzehe halbieren."
+		},{
+			"key" : "info_13",
+			"value" : "Die halbe Knoblauchzehe auf den gerösteten Baguettescheiben verreiben."
+		},{
+			"key" : "info_14",
+			"value" : "Mit dem Öl werden anfangs die gerösteten Baguettescheiben und später die fertige Bruschetta beträufelt."
+		},{
+			"key" : "info_15",
+			"value" : "Die Tomaten waschen."
+		},{
+			"key" : "info_16",
+			"value" : "Nun die Tomaten entkernen."
+		},{
+			"key" : "info_17",
+			"value" : "Tomaten in feine Würfel schneiden."
+		},{
+			"key" : "info_18",
+			"value" : "Die gewürfelten Tomaten auf den Baguettescheiben verteilen."
+		},{
+			"key" : "info_19",
+			"value" : "Das Basilikum waschen und trocken tupfen."
+		},{
+			"key" : "info_20",
+			"value" : "Das Basilikum mit Küchenpapier trocken tupfen."
+		},{
+			"key" : "info_21",
+			"value" : "Mit dem Messer fein hacken."
+		},{
+			"key" : "info_22",
+			"value" : "Jetzt kann das gehackte Basilikum über die Tomaten gestreut werden."
+		},{
+			"key" : "info_23",
+			"value" : "Die Bruschetta mit Salz würzen."
+		},{
+			"key" : "info_24",
+			"value" : "Die Bruschetta mit Pfeffer würzen."
+		}
+	],
+	"informations": [
+		{
+			"key": "info_00",
+			"value": "baguette_01"
+		},{
+			"key": "info_11",
+			"value": "knoblauch_02"
+		},{
+			"key": "info_14",
+			"value": "olivenoel_02"
+		},{
+			"key": "info_15",
+			"value": "tomaten_01"
+		},{
+			"key": "info_19",
+			"value": "basilikum_01"
+		},{
+			"key": "info_23",
+			"value": "salz_01"
+		},{
+			"key": "info_24",
+			"value": "pfeffer_01"
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Prima!\nDie Baguettescheiben kannst du\nnun im Ofen rösten."
+		},{
+			"key" : "feed_01",
+			"value" : "Super!\nDas Würfeln der Tomaten\nläuft ja schon ganz gut."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	]
+}
+
+================================================================================
+RECIPE INPUT:
+================================================================================
+

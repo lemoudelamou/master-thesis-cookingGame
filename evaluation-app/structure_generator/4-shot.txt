@@ -1,0 +1,5016 @@
+YOUR TASK
+Given a recipe, generate TWO JSON files:
+- File 1: process.json (Game Mechanics)
+- File 2: taskTexts.json (Localization – German)
+
+================================================================================
+PHASE 1: LEARN FROM EXAMPLES (MANDATORY - DO NOT SKIP)
+================================================================================
+
+Before processing the new recipe, you MUST extract patterns from the provided examples.
+
+STEP 1A: ANALYZE TASK STRUCTURE PATTERNS
+For each example, examine the tasks array:
+
+1. **Field Usage Patterns:**
+   - Which fields appear together? (e.g., tasks with cursorBitmap also have...)
+   - Which fields are mutually exclusive?
+   - Which fields are required vs. optional?
+   
+2. **Naming Conventions:**
+   - How are task names constructed? (ingredient states, combinations, etc.)
+   - When are generic names used (e.g., "schuessel") vs. specific names?
+   - How do task names relate to their icons?
+
+3. **Position and Placement Rules:**
+   - When does a task have openPosition vs. donePosition vs. both?
+   - What are all the valid position values? (countertopLeftBottom, stoveRightBottom, etc.)
+   - When are customPositionOffsetMouse and customExtentOffsetMouse used?
+
+4. **Cursor and Interaction Fields:**
+   - When does a task need cursorBitmap vs. cursorHotspot vs. both vs. neither?
+   - What determines if a task can be "picked up" by the player?
+   - When is canHaveAlternativeDonePosition = "1" used?
+
+5. **Active State Rules:**
+   - When does a task have activeTime?
+   - What does activeToDone = "0" vs. activeToDone = "1" (or absence) mean?
+   - When does a task have activePosition?
+
+STEP 1B: ANALYZE TRANSITION PATTERNS
+For each example, examine the transitions array:
+
+1. **Transition Types:**
+   - Manual transitions (player drags sourceTask onto destTask)
+   - Auto transitions 
+   - When is each type used?
+
+2. **Transition Triggers:**
+   - What makes a transition manual vs. auto?
+   - Are auto transitions always used for specific scenarios (e.g., after cooking)?
+   - How many transitions can a single task have as source or destination?
+
+3. **Result Task Creation:**
+   - When does resultTask reference an existing task vs. create a new state?
+   - How are "intermediate states" handled (e.g., raw → cooked → combined)?
+
+STEP 1C: ANALYZE RECIPE-TO-TASK MAPPING
+For each example, trace how recipe steps map to tasks:
+
+1. **Single Recipe Step → Multiple Tasks Pattern:**
+   Document cases where one recipe instruction creates multiple tasks/transitions.
+   Example: "Tomaten waschen" → might need: tomaten (raw) → tomatenGewaschen → transitions
+
+2. **Preparation Sequences:**
+   How are multi-step preparations modeled?
+   Example: Ingredient → washed → chopped → added to bowl
+
+3. **Combination Logic:**
+   When multiple ingredients combine, how are tasks structured?
+   Example: Bowl + ingredient1 → bowlMitZutat1 + ingredient2 → bowlMitZutaten
+
+4. **Cooking/Heating Patterns:**
+   How are timed cooking actions modeled with activeTime and transitions?
+
+STEP 1D: ANALYZE TASKTEXTS STRUCTURE
+Examine how taskTexts.json entries correspond to process.json:
+
+1. **Key Naming Pattern:**
+   - How do info_XX, desc_XX, feed_XX numbers relate to tasks?
+   - When are sequential numbers used vs. gaps?
+
+2. **Description Types:**
+   - "descriptions" (info_XX): What kind of instructions do these contain?
+   - "titles" (desc_XX): How do these differ from descriptions?
+   - "feedbacks" (feed_XX): When are these used?
+   - "informations" (info_XX in informations array): What are these for?
+
+3. **Content Patterns:**
+   - How detailed should descriptions be?
+   - What verb tenses and sentence structures are used?
+   - How are multi-step actions described?
+
+================================================================================
+OUTPUT YOUR PATTERN ANALYSIS (MANDATORY)
+================================================================================
+
+Before processing the new recipe, you MUST output:
+
+**EXTRACTED PATTERNS SUMMARY:**
+
+1. Task Field Rules:
+   [List discovered rules about when fields are required/optional]
+
+2. Transition Rules:
+   [List discovered rules about manual vs. auto transitions]
+
+3. Recipe Mapping Rules:
+   [List discovered rules about how recipe steps become tasks]
+
+4. TaskTexts Rules:
+   [List discovered rules about key naming and content]
+
+5. Common Task Categories:
+   [List reusable task types found across examples: bowls, pots, ingredients in various states, etc.]
+
+================================================================================
+PHASE 2: ANALYZE NEW RECIPE (MANDATORY - STEP BY STEP)
+================================================================================
+
+Now analyze the new recipe input step by step:
+
+STEP 2A: RECIPE BREAKDOWN
+List each recipe step with explicit analysis:
+
+For each recipe step:
+```
+Recipe Step [N]: [exact text from recipe]
+
+Required Player Actions:
+- [ ] Action 1
+- [ ] Action 2
+
+Ingredients Involved:
+- Ingredient A (initial state: X, final state: Y)
+- Ingredient B (initial state: X, final state: Y)
+
+Task Sequence Required:
+1. Task name: [name] (reason: [why this task is needed])
+2. Task name: [name] (reason: [why this task is needed])
+...
+
+Transitions Required:
+1. [sourceTask] → [destTask] = [resultTask] (type: manual/auto, reason: [why])
+2. [sourceTask] → [destTask] = [resultTask] (type: manual/auto, reason: [why])
+...
+```
+
+STEP 2B: TASK INVENTORY
+Create a complete inventory of all tasks needed:
+
+```
+[Task Name]
+- Purpose: [what this represents]
+- Reuses common asset: [yes/no - which one]
+- Required fields: [list with reasons]
+- Used in recipe steps: [step numbers]
+- Transitions: [as source: X times, as destination: Y times]
+```
+
+STEP 2C: VALIDATE COMPLETENESS
+Check that every recipe step has corresponding tasks and transitions:
+- [ ] Step 1: covered by tasks [list] and transitions [list]
+- [ ] Step 2: covered by tasks [list] and transitions [list]
+...
+
+================================================================================
+PHASE 3: GENERATE JSON FILES
+================================================================================
+
+STEP 3A: Generate process.json
+- Follow the exact structure from examples
+- Apply the patterns you documented in Phase 1
+- Include all required fields based on your analysis
+
+STEP 3B: Generate taskTexts.json
+- Follow the exact structure from examples
+- Use sequential numbering for info/desc/feed keys
+- Write clear, imperative German instructions
+- Match the writing style from examples
+
+================================================================================
+OUTPUT ORDER (STRICT)
+================================================================================
+
+1. **EXTRACTED PATTERNS SUMMARY** (from Phase 1)
+2. **RECIPE BREAKDOWN** (from Phase 2A)
+3. **TASK INVENTORY** (from Phase 2B)
+4. **VALIDATION CHECKLIST** (from Phase 2C)
+5. **process.json** (complete file)
+6. **taskTexts.json** (complete file)
+
+================================================================================
+CRITICAL RULES
+================================================================================
+
+- NEVER skip the analysis phases
+- NEVER generate JSON without showing your reasoning
+- NEVER assume - if uncertain about a pattern, state it explicitly
+- ALWAYS validate that every recipe step is covered
+- ALWAYS explain WHY you chose manual vs. auto transitions
+- ALWAYS explain WHY you included specific fields in tasks
+
+
+================================================================================
+EXAMPLES FOLLOW BELOW
+================================================================================
+
+
+EXAMPLE 1: 
+
+Recipe input:
+Tomaten Mozarella-Speiße
+
+(für 4 Personen)
+
+20 Mozzarellakugeln (ca. 160 g)
+2 TL Pesto à la Genovese
+20 rote Cherrytomaten (ca. 250 g)
+20 Basilikumblätter
+Meersalz
+Pfeffer aus der Mühle
+1-2 EL Olivenöl
+
+
+Für das Pesto:
+
+2 Bund Basilikum
+3 EL Pinienkerne und Walnüsse gemischt
+2 Knoblauchzehen
+80 g frisch geriebener Parmesan
+4 EL gutes kaltgepresstes Olivenöl
+1 Spritzer Limettensaft
+
+
+1. Das Basilikum waschen und trocken tupfen. Alle Zutaten für das Pesto in einem Mixer fein pürieren. Evtl. mit heißem Wasser oder Gemüsesud verlängern. 
+2. Die abgetropften Mozzarellakugeln mit Pesto bestreichen und auf je einen Cocktailspieß stecken. 
+3. Cherrytomaten mit kochendem Wasser übergießen, kalt abschrecken und häuten. Mit je einem Basilikumblatt umhüllen und dazuspießen.
+4. Die fertigen Spieße mit Salz und Pfeffer würzen und mit Olivenöl bestreichen.
+
+Sarahs Tipp:
+Dieses Pesto passt auch hervorragend zu Nudeln. Wer keine Mozzarellakugeln bekommt, nimmt ein großes Stück Mozzarella und schneidet es in möglichst gleich große Würfel.
+
+
+
+Process.json:
+
+{"tasks": [{
+	"name": "mozzarellakugelMitKlecks",
+	"info": "info_14",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "7 50",
+	"description": "desc_14",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/mozzarellakugelMitKlecks",
+	"donePosition": "countertopLeftBottom",
+	"customExtentOffsetMouse": "-16 -85"
+}, {
+	"name": "schuessel",
+	"info": "info_08",
+	"customPositionOffsetMouse": "17 33",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "common/schuessel_rot",
+	"customExtentOffsetMouse": "-34 -67",
+	"description": "desc_08"
+}, {
+	"name": "basilikumAbgeschnitten",
+	"info": "info_00c",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00c",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "cherrytomateAbgeschreckt",
+	"info": "info_24",
+	"openIcon": "0101/tomateUeberbrueht",
+	"description": "desc_24",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0101/tomateUeberbrueht_cursor"
+}, {
+	"name": "parmesan",
+	"info": "info_04",
+	"openIcon": "common/parmesan",
+	"description": "desc_04",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/parmesan_cursor"
+}, {
+	"name": "limettensaft",
+	"info": "info_07",
+	"openIcon": "common/limettensaft",
+	"description": "desc_07",
+	"cursorBitmap": "common/limettensaft_cursor"
+}, {
+	"name": "olivenoel",
+	"info": "info_06",
+	"cursorHotspot": "20 25",
+	"openIcon": "common/oel",
+	"description": "desc_06",
+	"cursorBitmap": "common/oel_cursor"
+}, {
+	"name": "schuesselMitZutaten",
+	"info": "info_09",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "17 33",
+	"description": "desc_09",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "0101/schuessel_rotMitZutaten",
+	"donePosition": "countertopRightBottom",
+	"customExtentOffsetMouse": "-34 -67"
+}, {
+	"name": "basilikumGewaschen",
+	"info": "info_00a",
+	"openIcon": "common/basilikumBlaetterNass",
+	"description": "desc_00a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumBlaetterNass_cursor"
+}, {
+	"name": "leeresTask",
+	"info": "info_25a",
+	"hoverBitmap": "leeresTaskCuttingboard",
+	"openIcon": "common/leeresTask",
+	"openPosition": "cuttingboard",
+	"description": "desc_25a"
+}, {
+	"name": "spiess",
+	"info": "info_16",
+	"openIcon": "0101/spiess",
+	"description": "desc_16",
+	"cursorBitmap": "0101/spiess_cursor"
+}, {
+	"name": "basilikumGetrocknet",
+	"info": "info_00b",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00b",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "spiessMitMozzarellakugel",
+	"info": "info_17",
+	"customPositionOffsetMouse": "7 50",
+	"speech": "0101_feedback_01",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugel",
+	"feedback": "feed_01",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_17"
+}, {
+	"name": "mozzarellakugelAufTeller",
+	"info": "info_13",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/mozzarellakugelTeller",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_13"
+}, {
+	"name": "pestoFertig",
+	"info": "info_10",
+	"cursorHotspot": "20 90",
+	"customPositionOffsetMouse": "17 33",
+	"description": "desc_10",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "0101/schuessel_rotMitPesto",
+	"donePosition": "countertopRightBottom",
+	"speech": "0101_feedback_00",
+	"cursorBitmap": "0101/schuessel_rotMitPesto_cursor",
+	"customExtentOffsetMouse": "-34 -67",
+	"feedback": "feed_00"
+}, {
+	"name": "spiessFertig",
+	"info": "info_32",
+	"openIcon": "0101/spiessKugelTomateGewuerztOel",
+	"description": "desc_32",
+	"openPosition": "countertopLeftBottom"
+}, {
+	"name": "limetten",
+	"info": "info_07a",
+	"openIcon": "common/limetteEinzelnHalbiert",
+	"description": "desc_07a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/limetteEinzelnHalbiert_cursor"
+}, {
+	"name": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"info": "info_31",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugelTomateGewuerzt",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_31"
+}, {
+	"name": "mozzarellakugelBestrichen",
+	"info": "info_15",
+	"customPositionOffsetMouse": "7 50",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/kugelPesto",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_15"
+}, {
+	"name": "cherrytomate",
+	"info": "info_21",
+	"openIcon": "common/tomateCherryZweig",
+	"description": "desc_21",
+	"cursorBitmap": "common/tomateCherryZweig_cursor"
+}, {
+	"name": "cherrytomateGehaeutet",
+	"info": "info_25",
+	"openIcon": "0101/tomateGehaeutet",
+	"description": "desc_25",
+	"cursorBitmap": "0101/tomateGehaeutet_cursor"
+}, {
+	"name": "parmesanGerieben",
+	"info": "info_05",
+	"openIcon": "common/parmesanGerieben",
+	"description": "desc_05",
+	"cursorBitmap": "common/parmesanGerieben_cursor"
+}, {
+	"name": "cherrytomateGewaschen",
+	"info": "info_21a",
+	"openIcon": "common/tomateCherryZweigGewaschen",
+	"description": "desc_21a",
+	"cursorBitmap": "common/tomateCherryZweigGewaschen_cursor"
+}, {
+	"name": "knoblauchzehe",
+	"info": "info_02",
+	"openIcon": "common/knoblauchzehe",
+	"description": "desc_02",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchzehe_cursor"
+}, {
+	"name": "knoblauchAbgezogen",
+	"info": "info_03",
+	"openIcon": "common/knoblauchAbgezogen",
+	"description": "desc_03",
+	"cursorBitmap": "common/knoblauchAbgezogen_cursor"
+}, {
+	"name": "topfMitWasser",
+	"info": "info_19",
+	"customPositionOffsetMouse": "10 33",
+	"activeTime": "30",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveRightBottom",
+	"description": "desc_19",
+	"openIcon": "common/topf1MitWasserHeiss",
+	"customExtentOffsetMouse": "-20 -70",
+	"activeToDone": "0"
+}, {
+	"name": "spiessMitMozzarellakugelUndTomate",
+	"info": "info_28",
+	"customPositionOffsetMouse": "7 50",
+	"speech": "0101_feedback_01",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"openIcon": "0101/spiessKugelTomate",
+	"feedback": "feed_01",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_28"
+}, {
+	"name": "topf",
+	"info": "info_18",
+	"cursorHotspot": "90 80",
+	"openIcon": "common/topf1_leer",
+	"description": "desc_18",
+	"hoverBitmap": "topf1",
+	"customPositionOffsetMouse": "10 33",
+	"unopenedToOpen": "1",
+	"donePosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-20 -70",
+	"cursorBitmap": "common/topf1_leer_cursor"
+}, {
+	"name": "basilikumBlatt",
+	"info": "info_26",
+	"openIcon": "common/basilikumBlatt",
+	"description": "desc_26",
+	"cursorBitmap": "common/basilikumBlatt_cursor"
+}, {
+	"name": "teller",
+	"info": "info_11",
+	"customPositionOffsetMouse": "7 50",
+	"openIcon": "0101/tellerLeer",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "teller101",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-16 -85",
+	"description": "desc_11"
+}, {
+	"name": "cherrytomateGehaeutetAufCuttingboard",
+	"info": "info_25b",
+	"description": "desc_25b",
+	"openIcon": "0101/tomateGehaeutet",
+	"openPosition": "cuttingboard",
+	"cursorBitmap": "0101/tomateGehaeutet_cursor"
+}, {
+	"name": "mozzarellakugel",
+	"info": "info_12",
+	"openIcon": "0101/mozzarellakugel",
+	"description": "desc_12",
+	"cursorBitmap": "0101/mozzarellakugel_cursor"
+}, {
+	"name": "topfMitKochendemWasser",
+	"info": "info_20",
+	"customPositionOffsetMouse": "10 33",
+	"openSound": "wasserKochen",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf1",
+	"openIcon": "common/topf1MitWasserHeiss",
+	"customExtentOffsetMouse": "-20 -70",
+	"description": "desc_20"
+}, {
+	"name": "pinienkerneWalnuesse",
+	"info": "info_01",
+	"openIcon": "0101/pinienkerneWalnuesse",
+	"description": "desc_01",
+	"cursorBitmap": "0101/pinienkerneWalnuesse_cursor"
+}, {
+	"name": "basilikum",
+	"info": "info_00",
+	"openIcon": "common/basilikumBlaetter",
+	"description": "desc_00",
+	"cursorBitmap": "common/basilikumBlaetter_cursor"
+}, {
+	"name": "cherrytomateMitBasilikum",
+	"info": "info_27",
+	"openIcon": "0101/tomateBasilikum",
+	"description": "desc_27",
+	"cursorBitmap": "0101/tomateBasilikum_cursor"
+}, {
+	"name": "salz",
+	"info": "info_29",
+	"openIcon": "common/salz",
+	"description": "desc_29",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "topfMitTomaten",
+	"info": "info_22",
+	"cursorHotspot": "90 81",
+	"customPositionOffsetMouse": "10 33",
+	"description": "desc_22",
+	"hoverBitmap": "topf1",
+	"openIcon": "0101/topf1MitTomaten",
+	"doneSound": "wasserKochen",
+	"donePosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-20 -70"
+}, {
+	"name": "cherrytomateUeberbrueht",
+	"info": "info_23",
+	"openIcon": "0101/tomateUeberbrueht",
+	"description": "desc_23",
+	"cursorBitmap": "0101/tomateUeberbrueht_cursor"
+}, {
+	"name": "pfeffer",
+	"info": "info_30",
+	"openIcon": "common/pfeffer",
+	"description": "desc_30",
+	"cursorBitmap": "common/pfeffer_cursor"
+}
+], "transitions": [{
+	"name": "transition (move_02)",
+	"parent": "knoblauchAbgezogen",
+	"child": "schuessel",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0101/additive_knoblauch"
+}, {
+	"name": "transition (auto_00)",
+	"parent": "schuessel",
+	"child": "schuesselMitZutaten",
+	"lob": "2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_04)",
+	"parent": "olivenoel",
+	"child": "schuessel",
+	"sound": "oel",
+	"additiveOpenIcon": "0101/additive_oel"
+}, {
+	"name": "transition (auto_05)",
+	"parent": "topfMitWasser",
+	"child": "topfMitKochendemWasser",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_14)",
+	"parent": "olivenoel",
+	"child": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"sound": "oel"
+}, {
+	"name": "transition (abschrecken_00)",
+	"parent": "cherrytomateUeberbrueht",
+	"child": "cherrytomateAbgeschreckt",
+	"tool": "watertap"
+}, {
+	"name": "transition (move_00)",
+	"parent": "basilikumAbgeschnitten",
+	"child": "schuessel",
+	"sound": "zutatPulvrig",
+	"additiveOpenIcon": "0101/additive_basilikum"
+}, {
+	"name": "transition (wasserEinfuellen_00)",
+	"parent": "topf",
+	"child": "topfMitWasser",
+	"tool": "watertap"
+}, {
+	"name": "transition (auto_04)",
+	"parent": "mozzarellakugelBestrichen",
+	"child": "spiessMitMozzarellakugel",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_10)",
+	"parent": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"child": "spiessFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (move_12)",
+	"parent": "salz",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0101/additive_salz"
+}, {
+	"name": "transition (auto_06)",
+	"parent": "topfMitKochendemWasser",
+	"child": "topfMitTomaten",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_08)",
+	"parent": "spiessMitMozzarellakugel",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"lob": "2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (abschneiden_00)",
+	"parent": "basilikumGetrocknet",
+	"child": "basilikumBlatt",
+	"tool": "schere",
+	"minigameAction": "leftRight",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (move_08)",
+	"parent": "spiess",
+	"child": "mozzarellakugelBestrichen",
+	"sound": "aufspiessen"
+}, {
+	"name": "transition (move_06)",
+	"parent": "mozzarellakugel",
+	"child": "teller",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (abtrocknen_00)",
+	"parent": "basilikumGewaschen",
+	"child": "basilikumGetrocknet",
+	"tool": "papierrolle",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "30"
+}, {
+	"name": "transition (waschen_01)",
+	"parent": "cherrytomate",
+	"child": "cherrytomateGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (auto_02)",
+	"parent": "teller",
+	"child": "mozzarellakugelAufTeller",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_10)",
+	"parent": "basilikumBlatt",
+	"child": "cherrytomateGehaeutetAufCuttingboard",
+	"sound": "blumeAufQuiche"
+}, {
+	"name": "transition (auto_07)",
+	"parent": "cherrytomateGehaeutetAufCuttingboard",
+	"child": "cherrytomateMitBasilikum",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_12)",
+	"parent": "basilikumBlatt",
+	"child": "basilikumAbgeschnitten",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_03)",
+	"parent": "mozzarellakugelAufTeller",
+	"child": "mozzarellakugelMitKlecks",
+	"automatic": "1"
+}, {
+	"name": "transition (move_15)",
+	"parent": "cherrytomateGehaeutet",
+	"child": "leeresTask"
+}, {
+	"name": "transition (move_03)",
+	"parent": "parmesanGerieben",
+	"child": "schuessel",
+	"sound": "zutatPulvrig",
+	"additiveOpenIcon": "0101/additive_parmesan"
+}, {
+	"name": "transition (reiben_01)",
+	"parent": "parmesan",
+	"child": "parmesanGerieben",
+	"tool": "reibe",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (move_01)",
+	"parent": "pinienkerneWalnuesse",
+	"child": "schuessel",
+	"sound": "zutatNuesse",
+	"additiveOpenIcon": "0101/additive_pinienkWalnuesse"
+}, {
+	"name": "transition (auto_11)",
+	"parent": "leeresTask",
+	"child": "cherrytomateGehaeutetAufCuttingboard",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_11)",
+	"parent": "cherrytomateMitBasilikum",
+	"child": "spiessMitMozzarellakugel",
+	"sound": "aufspiessen"
+}, {
+	"name": "transition (move_07)",
+	"parent": "pestoFertig",
+	"child": "mozzarellakugelAufTeller",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (move_13)",
+	"parent": "pfeffer",
+	"child": "spiessMitMozzarellakugelUndTomate",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0101/additive_pfeffer"
+}, {
+	"name": "transition (auto_09)",
+	"parent": "spiessMitMozzarellakugelUndTomate",
+	"child": "spiessMitMozzarellakugelUndTomateGewuerzt",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_09)",
+	"parent": "cherrytomateGewaschen",
+	"child": "topfMitKochendemWasser",
+	"sound": "wasserWurf"
+}, {
+	"name": "transition (pressen_00)",
+	"parent": "limetten",
+	"child": "limettensaft",
+	"tool": "presse",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "40"
+}, {
+	"name": "transition (bestreichen_00)",
+	"parent": "mozzarellakugelMitKlecks",
+	"child": "mozzarellakugelBestrichen",
+	"minigameMaxScore": "30",
+	"mandatory": "1",
+	"tool": "pinsel",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "countertopLeftBottom",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "basilikum",
+	"child": "basilikumGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (abziehen_00)",
+	"parent": "knoblauchzehe",
+	"child": "knoblauchAbgezogen",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (haeuten_00)",
+	"parent": "cherrytomateAbgeschreckt",
+	"child": "cherrytomateGehaeutet",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "20",
+	"mandatory": "1",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (rausholen_00)",
+	"parent": "topfMitTomaten",
+	"child": "cherrytomateUeberbrueht",
+	"tool": "schaumkelle"
+}, {
+	"name": "transition (puerieren_00)",
+	"parent": "schuesselMitZutaten",
+	"child": "pestoFertig",
+	"tool": "puerierstab",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "10",
+	"minigamePosition": "countertopRightBottom",
+	"minigameMaxScore": "40"
+}, {
+	"name": "transition (move_05)",
+	"parent": "limettensaft",
+	"child": "schuessel",
+	"sound": "zutatFluessig",
+	"additiveOpenIcon": "0101/additive_limettensaft"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Basilikum"
+		},{
+			"key" : "desc_00a",
+			"value" : "Gewaschenes Basilikum"
+		},{
+			"key" : "desc_00b",
+			"value" : "Abgetrocknetes Basilikum"
+		},{
+			"key" : "desc_00c",
+			"value" : "Basilikum für das Pesto"
+		},{
+			"key" : "desc_01",
+			"value" : "Pinienkerne und Walnüsse"
+		},{
+			"key" : "desc_02",
+			"value" : "Knoblauchzehe"
+		},{
+			"key" : "desc_03",
+			"value" : "Abgezogener Knoblauch"
+		},{
+			"key" : "desc_04",
+			"value" : "Parmesan"
+		},{
+			"key" : "desc_05",
+			"value" : "Geriebener Parmesan"
+		},{
+			"key" : "desc_06",
+			"value" : "Olivenöl"
+		},{
+			"key" : "desc_07",
+			"value" : "Limettensaft"
+		},{
+			"key" : "desc_07a",
+			"value" : "Limetten"
+		},{
+			"key" : "desc_08",
+			"value" : "Schüssel für das Pesto"
+		},{
+			"key" : "desc_09",
+			"value" : "Schüssel mit Zutaten für das Pesto"
+		},{
+			"key" : "desc_10",
+			"value" : "Fertiges Pesto"
+		},{
+			"key" : "desc_11",
+			"value" : "Teller"
+		},{
+			"key" : "desc_12",
+			"value" : "Mozzarellakugel"
+		},{
+			"key" : "desc_13",
+			"value" : "Mozzarellakugel"
+		},{
+			"key" : "desc_14",
+			"value" : "Mozzarellakugel mit Pesto"
+		},{
+			"key" : "desc_15",
+			"value" : "Mit Pesto bestrichene Mozzarellakugel"
+		},{
+			"key" : "desc_16",
+			"value" : "Cocktailspieß"
+		},{
+			"key" : "desc_17",
+			"value" : "Spieß mit Mozzarellakugel"
+		},{
+			"key" : "desc_18",
+			"value" : "Topf"
+		},{
+			"key" : "desc_19",
+			"value" : "Topf mit Wasser"
+		},{
+			"key" : "desc_20",
+			"value" : "Topf mit kochendem Wasser"
+		},{
+			"key" : "desc_21",
+			"value" : "Cherrytomaten"
+		},{
+			"key" : "desc_21a",
+			"value" : "Gewaschene Cherrytomaten"
+		},{
+			"key" : "desc_22",
+			"value" : "Topf mit Tomaten"
+		},{
+			"key" : "desc_23",
+			"value" : "Überbrühte Cherrytomate"
+		},{
+			"key" : "desc_24",
+			"value" : "Abgeschreckte Cherrytomate"
+		},{
+			"key" : "desc_25",
+			"value" : "Gehäutete Cherrytomate"
+		},{
+			"key" : "desc_25a",
+			"value" : "Schneidebrett"
+		},{
+			"key" : "desc_25b",
+			"value" : "Gehäutete Cherrytomate"
+		},{
+			"key" : "desc_26",
+			"value" : "Basilikumblatt für den Spieß"
+		},{
+			"key" : "desc_27",
+			"value" : "Cherrytomate mit Basilikum"
+		},{
+			"key" : "desc_28",
+			"value" : "Spieß mit Mozzarellakugel und Tomate"
+		},{
+			"key" : "desc_29",
+			"value" : "Salz"
+		},{
+			"key" : "desc_30",
+			"value" : "Pfeffer"
+		},{
+			"key" : "desc_31",
+			"value" : "Spieß mit Mozzarellakugel, Tomate und Gewürzen"
+		},{
+			"key" : "desc_32",
+			"value" : "Fertiger Tomate-Mozzarella-Spieß"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Das Basilikum wird erst mal gewaschen."
+		},{
+			"key" : "info_00a",
+			"value" : "Nun das Basilikum mit Küchenpapier trocken tupfen."
+		},{
+			"key" : "info_00b",
+			"value" : "Vom Basilikum ein Blatt für den Spieß abschneiden."
+		},{
+			"key" : "info_00c",
+			"value" : "Das Basilikum in die Schüssel geben."
+		},{
+			"key" : "info_01",
+			"value" : "Beides in die Schüssel geben."
+		},{
+			"key" : "info_02",
+			"value" : "Der Knoblauch wird mit dem Messer abgezogen."
+		},{
+			"key" : "info_03",
+			"value" : "Den abgezogenen Knoblauch in die Schüssel geben."
+		},{
+			"key" : "info_04",
+			"value" : "Der Parmesan wird gerieben."
+		},{
+			"key" : "info_05",
+			"value" : "Den geriebenen Parmesan in die Schüssel geben."
+		},{
+			"key" : "info_06",
+			"value" : "Das Olivenöl wird für das Pesto und für die Spieße verwendet."
+		},{
+			"key" : "info_07",
+			"value" : "Den Limettensaft in die Schüssel geben."
+		},{
+			"key" : "info_07a",
+			"value" : "Die Limette mit der Zitronenpresse auspressen."
+		},{
+			"key" : "info_08",
+			"value" : "Basilikum, Pinienkerne und Walnüsse, Knoblauchzehen, frisch geriebenen Parmesan, Olivenöl und Limettensaft hineingeben."
+		},{
+			"key" : "info_09",
+			"value" : "Die Zutaten werden nun fein püriert."
+		},{
+			"key" : "info_10",
+			"value" : "Etwas Pesto auf eine Mozzarellakugel geben."
+		},{
+			"key" : "info_11",
+			"value" : "Hier die Mozzarellakugel hinlegen, um sie mit dem Pesto zu bestreichen."
+		},{
+			"key" : "info_12",
+			"value" : "Die Mozzarellakugel auf den Teller legen, um sie mit dem Pesto zu bestreichen."
+		},{
+			"key" : "info_13",
+			"value" : "Etwas Pesto auf eine Mozzarellakugel geben."
+		},{
+			"key" : "info_14",
+			"value" : "Das Pesto wird mit einem Pinsel verstrichen."
+		},{
+			"key" : "info_15",
+			"value" : "Cocktailspieß in die Mozzarellakugel stecken."
+		},{
+			"key" : "info_16",
+			"value" : "Mozzarellakugel mit Pesto auf einen Cocktailspieß stecken."
+		},{
+			"key" : "info_17",
+			"value" : "Nun die mit einem Basilikumblatt umhüllte Tomate dazuspießen."
+		},{
+			"key" : "info_18",
+			"value" : "Wasser in den Topf einfüllen, um die Cherrytomaten zu überbrühen."
+		},{
+			"key" : "info_19",
+			"value" : "Wenn das Wasser kocht, können die Cherrytomaten hineingegeben werden."
+		},{
+			"key" : "info_20",
+			"value" : "Wenn das Wasser kocht, können die Cherrytomaten hineingegeben werden."
+		},{
+			"key" : "info_21",
+			"value" : "Die Cherrytomaten gründlich waschen."
+		},{
+			"key" : "info_21a",
+			"value" : "Die Cherrytomaten in das kochende Wasser geben."
+		},{
+			"key" : "info_22",
+			"value" : "Die Cherrytomaten mit der Schaumkelle aus dem Wasser nehmen."
+		},{
+			"key" : "info_23",
+			"value" : "Die überbrühte Cherrytomate unter kaltem Wasser abschrecken."
+		},{
+			"key" : "info_24",
+			"value" : "Die abgeschreckte Cherrytomate mit einem Messer häuten."
+		},{
+			"key" : "info_25",
+			"value" : "Auf das Schneidebrett legen und mit einem Basilikumblatt umhüllen."
+		},{
+			"key" : "info_25a",
+			"value" : "Hier wird die gehäutete Cherrytomate hingelegt."
+		},{
+			"key" : "info_25b",
+			"value" : "Mit einem Basilikumblatt umhüllen."
+		},{
+			"key" : "info_26",
+			"value" : "Die gehäutete Cherrytomate wird mit einem Basilikumblatt umhüllt."
+		},{
+			"key" : "info_27",
+			"value" : "Zur Mozzarellakugel dazuspießen."
+		},{
+			"key" : "info_28",
+			"value" : "Mit Salz und Pfeffer würzen."
+		},{
+			"key" : "info_29",
+			"value" : "Den fertigen Spieß mit Salz würzen."
+		},{
+			"key" : "info_30",
+			"value" : "Den fertigen Spieß mit Pfeffer würzen."
+		},{
+			"key" : "info_31",
+			"value" : "Mit Olivenöl bestreichen."
+		},{
+			"key" : "info_32",
+			"value" : ""
+		}
+	],
+	"informations": [
+		{
+			"key": "info_00",
+			"value": "basilikum_02"
+		},{
+			"key": "info_01",
+			"value": "pinienkerneWalnuesse_01"
+		},{
+			"key": "info_02",
+			"value": "knoblauch_03"
+		},{
+			"key": "info_04",
+			"value": "parmesan_01"
+		},{
+			"key": "info_06",
+			"value": "olivenoel_04"
+		},{
+			"key": "info_07a",
+			"value": "limetten_01"
+		},{
+			"key": "info_12",
+			"value": "mozzarella_01"
+		},{
+			"key": "info_13",
+			"value": "mozzarella_01"
+		},{
+			"key": "info_21",
+			"value": "cherrytomaten_01"
+		},{
+			"key": "info_29",
+			"value": "salz_02"
+		},{
+			"key": "info_30",
+			"value": "pfeffer_02"
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Das Pesto ist fertig.\nGut gemacht!"
+		},{
+			"key" : "feed_01",
+			"value" : "Super,\nder Spieß ist fertig.\nNun noch würzen und mit\nOlivenöl bestreichen."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	]
+}
+------
+
+EXAMPLE 2: 
+
+Recipe input: 
+Bruschetta
+
+(für 4-6 Personen)
+
+1 Baguette
+2 große Knoblauchzehen
+ca. 1/8 L Olivenöl
+7-8 mittelgroße reife Tomaten (ca. 700 g)
+3 Zweige Basilikum
+Meersalz
+Pfeffer aus der Mühle
+
+1. Baguette schräg in fingerbreite Scheiben schneiden, auf das Backblech legen und ca. 5 Minuten im Ofen rösten.
+2. Knoblauch abziehen, halbieren und mit der angeschnittenen Seite die Baguettescheiben einreiben. Anschließend mit 8-10 EL Olivenöl beträufeln.
+3. Tomaten waschen, entkernen und in Würfel schneiden. Auf die Brotscheiben verteilen.
+4. Basilikumblätter waschen und trocken tupfen, fein hacken und über die Tomaten streuen. Mit Salz und Pfeffer würzen. Mit dem restlichen Olivenöl beträufeln.
+
+Sarahs Tipp:
+Die Baguettescheiben lassen sich auch ganz einfach im Toaster rösten.
+
+Process.json:
+{"tasks": [{
+	"name": "knoblauchHalbiert",
+	"info": "info_13",
+	"openIcon": "common/knoblauchHalbiert",
+	"description": "desc_13",
+	"cursorBitmap": "common/knoblauchHalbiert_cursor"
+}, {
+	"name": "basilikumTrocken",
+	"info": "info_21",
+	"openIcon": "common/basilikumZweig",
+	"description": "desc_21",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumZweig_cursor"
+}, {
+	"name": "baguetteMitTomaten",
+	"info": "info_07",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitTomaten",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_07"
+}, {
+	"name": "olivenoel",
+	"info": "info_14",
+	"cursorHotspot": "20 25",
+	"openIcon": "common/oel",
+	"description": "desc_14",
+	"cursorBitmap": "common/oel_cursor"
+}, {
+	"name": "baguette",
+	"info": "info_00",
+	"openIcon": "0100/baguette",
+	"description": "desc_00",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0100/baguette_cursor"
+}, {
+	"name": "baguetteMitKnoblauch",
+	"info": "info_05",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitKnoblauch",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_05"
+}, {
+	"name": "bruschettaFertig",
+	"info": "info_10",
+	"openIcon": "0100/bruschettaFertig",
+	"description": "desc_10",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "blechMitBaguette",
+	"info": "info_03",
+	"cursorHotspot": "150 50",
+	"customPositionOffsetMouse": "20 135",
+	"activeToDone": "0",
+	"activeIcon": "0100/blechMitBaguette_small",
+	"activePosition": "oven",
+	"openIcon": "0100/blechMitBaguette",
+	"activeTime": "22",
+	"openPosition": "countertopRightBottom",
+	"cursorBitmap": "0100/blechMitBaguette_cursor",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_03"
+}, {
+	"name": "tomateGewaschen",
+	"info": "info_16",
+	"openIcon": "common/tomateGewaschen",
+	"description": "desc_16",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomateGewaschen_cursor"
+}, {
+	"name": "basilikumGehackt",
+	"info": "info_22",
+	"openIcon": "common/basilikumGehackt",
+	"description": "desc_22",
+	"cursorBitmap": "common/basilikumGehackt_cursor"
+}, {
+	"name": "tomateGewuerfelt",
+	"info": "info_18",
+	"speech": "0100_feedback_01",
+	"feedback": "feed_01",
+	"openIcon": "common/tomateGewuerfelt",
+	"cursorBitmap": "common/tomateGewuerfelt_cursor",
+	"description": "desc_18"
+}, {
+	"name": "baguetteGeschnitten",
+	"info": "info_01",
+	"speech": "0100_feedback_00",
+	"feedback": "feed_00",
+	"openIcon": "0100/baguetteGeschnitten",
+	"cursorBitmap": "0100/baguetteGeschnitten_cursor",
+	"description": "desc_01"
+}, {
+	"name": "knoblauchzehe",
+	"info": "info_11",
+	"openIcon": "common/knoblauchzehe",
+	"description": "desc_11",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchzehe_cursor"
+}, {
+	"name": "basilikumGewaschen",
+	"info": "info_20",
+	"openIcon": "common/basilikumZweigGewaschen",
+	"description": "desc_20",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/basilikumZweigGewaschen_cursor"
+}, {
+	"name": "blech",
+	"info": "info_02",
+	"customPositionOffsetMouse": "20 135",
+	"openIcon": "common/blech",
+	"openPosition": "countertopRightBottom",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_02"
+}, {
+	"name": "baguetteGeroestet",
+	"info": "info_04",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteGeroestet",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_04"
+}, {
+	"name": "bruschetta",
+	"info": "info_08",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/bruschetta",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_08"
+}, {
+	"name": "basilikumZweig",
+	"info": "info_19",
+	"openIcon": "common/basilikumZweig",
+	"description": "desc_19",
+	"cursorBitmap": "common/basilikumZweig_cursor"
+}, {
+	"name": "tomate",
+	"info": "info_15",
+	"openIcon": "common/tomate",
+	"description": "desc_15",
+	"cursorBitmap": "common/tomate_cursor"
+}, {
+	"name": "bruschettaGewuerzt",
+	"info": "info_09",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/bruschettaGewuerzt",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_09"
+}, {
+	"name": "pfeffer",
+	"info": "info_24",
+	"openIcon": "common/pfeffer",
+	"description": "desc_24",
+	"cursorBitmap": "common/pfeffer_cursor"
+}, {
+	"name": "salz",
+	"info": "info_23",
+	"openIcon": "common/salz",
+	"description": "desc_23",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "tomateEntkernt",
+	"info": "info_17",
+	"openIcon": "common/tomateEntkernt",
+	"description": "desc_17",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomateEntkernt_cursor"
+}, {
+	"name": "baguetteMitOel",
+	"info": "info_06",
+	"customPositionOffsetMouse": "20 135",
+	"openPosition": "countertopRightBottom",
+	"hoverBitmap": "blech",
+	"openIcon": "0100/baguetteMitOel",
+	"customExtentOffsetMouse": "-30 -225",
+	"description": "desc_06"
+}, {
+	"name": "knoblauchAbgezogen",
+	"info": "info_12",
+	"openIcon": "common/knoblauchAbgezogen",
+	"description": "desc_12",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchAbgezogen_cursor"
+}
+], "transitions": [{
+	"name": "transition (move_02)",
+	"parent": "olivenoel",
+	"child": "baguetteMitKnoblauch",
+	"sound": "oel"
+}, {
+	"name": "transition (auto_06)",
+	"parent": "bruschettaGewuerzt",
+	"child": "bruschettaFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (wuerfeln_00)",
+	"parent": "tomateEntkernt",
+	"child": "tomateGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (auto_02)",
+	"parent": "baguetteMitKnoblauch",
+	"child": "baguetteMitOel",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_06)",
+	"parent": "pfeffer",
+	"child": "bruschetta",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0100/additive_pfeffer"
+}, {
+	"name": "transition (schneiden_00)",
+	"parent": "baguette",
+	"child": "baguetteGeschnitten",
+	"sound": "brotSchneiden",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (move_04)",
+	"parent": "basilikumGehackt",
+	"child": "baguetteMitTomaten",
+	"sound": "wuerzen"
+}, {
+	"name": "transition (trockentupfen_00)",
+	"parent": "basilikumGewaschen",
+	"child": "basilikumTrocken",
+	"tool": "papierrolle",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "30"
+}, {
+	"name": "transition (auto_00)",
+	"parent": "blech",
+	"child": "blechMitBaguette",
+	"automatic": "1"
+}, {
+	"name": "transition (move_03)",
+	"parent": "tomateGewuerfelt",
+	"child": "baguetteMitOel",
+	"sound": "zutatMatschig",
+	"lob": "2"
+}, {
+	"name": "transition (waschen_01)",
+	"parent": "basilikumZweig",
+	"child": "basilikumGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move_01)",
+	"parent": "blechMitBaguette",
+	"child": "baguetteGeroestet",
+	"mandatory": "1"
+}, {
+	"name": "transition (move_00)",
+	"parent": "baguetteGeschnitten",
+	"child": "blech",
+	"sound": "etwasAufsBlech"
+}, {
+	"name": "transition (auto_04)",
+	"parent": "baguetteMitTomaten",
+	"child": "bruschetta",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto_01)",
+	"parent": "baguetteGeroestet",
+	"child": "baguetteMitKnoblauch",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (einreiben_00)",
+	"parent": "knoblauchHalbiert",
+	"child": "baguetteGeroestet",
+	"sound": "wuerzen",
+	"lob": "2"
+}, {
+	"name": "transition (hacken_00)",
+	"parent": "basilikumTrocken",
+	"child": "basilikumGehackt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (auto_05)",
+	"parent": "bruschetta",
+	"child": "bruschettaGewuerzt",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_05)",
+	"parent": "salz",
+	"child": "bruschetta",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0100/additive_salz"
+}, {
+	"name": "transition (entkernen_00)",
+	"parent": "tomateGewaschen",
+	"child": "tomateEntkernt",
+	"sound": "entkernen",
+	"minigameMaxScore": "30",
+	"tool": "messer",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (halbieren_00)",
+	"parent": "knoblauchAbgezogen",
+	"child": "knoblauchHalbiert",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "tomate",
+	"child": "tomateGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (abziehen_00)",
+	"parent": "knoblauchzehe",
+	"child": "knoblauchAbgezogen",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "40",
+	"tool": "messer",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (move_07)",
+	"parent": "olivenoel",
+	"child": "bruschettaGewuerzt",
+	"sound": "oel"
+}, {
+	"name": "transition (auto_03)",
+	"parent": "baguetteMitOel",
+	"child": "baguetteMitTomaten",
+	"mandatory": "1",
+	"automatic": "1"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Baguette"
+		},{
+			"key" : "desc_01",
+			"value" : "Baguettescheiben"
+		},{
+			"key" : "desc_02",
+			"value" : "Blech"
+		},{
+			"key" : "desc_03",
+			"value" : "Blech mit Baguette"
+		},{
+			"key" : "desc_04",
+			"value" : "Geröstete Baguettescheiben"
+		},{
+			"key" : "desc_05",
+			"value" : "Baguette mit Knoblauch"
+		},{
+			"key" : "desc_06",
+			"value" : "Baguette mit Öl"
+		},{
+			"key" : "desc_07",
+			"value" : "Baguette mit Tomaten"
+		},{
+			"key" : "desc_08",
+			"value" : "Bruschetta"
+		},{
+			"key" : "desc_09",
+			"value" : "Bruschetta mit Salz und Pfeffer"
+		},{
+			"key" : "desc_10",
+			"value" : "Fertige Bruschetta"
+		},{
+			"key" : "desc_11",
+			"value" : "Knoblauchzehe"
+		},{
+			"key" : "desc_12",
+			"value" : "Abgezogene Knoblauchzehe"
+		},{
+			"key" : "desc_13",
+			"value" : "Halbierte Knoblauchzehe"
+		},{
+			"key" : "desc_14",
+			"value" : "Olivenöl"
+		},{
+			"key" : "desc_15",
+			"value" : "Tomate"
+		},{
+			"key" : "desc_16",
+			"value" : "Gewaschene Tomate"
+		},{
+			"key" : "desc_17",
+			"value" : "Entkernte Tomate"
+		},{
+			"key" : "desc_18",
+			"value" : "Gewürfelte Tomate"
+		},{
+			"key" : "desc_19",
+			"value" : "Basilikumzweige"
+		},{
+			"key" : "desc_20",
+			"value" : "Gewaschenes Basilikum"
+		},{
+			"key" : "desc_21",
+			"value" : "Abgetrocknetes Basilikum"
+		},{
+			"key" : "desc_22",
+			"value" : "Gehacktes Basilikum"
+		},{
+			"key" : "desc_23",
+			"value" : "Salz"
+		},{
+			"key" : "desc_24",
+			"value" : "Pfeffer"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Das Baguette in Scheiben schneiden."
+		},{
+			"key" : "info_01",
+			"value" : "Die Baguettescheiben auf das Backblech legen."
+		},{
+			"key" : "info_02",
+			"value" : "Die Baguettescheiben auf das Backblech legen."
+		},{
+			"key" : "info_03",
+			"value" : "Die Baguettescheiben werden im Ofen geröstet."
+		},{
+			"key" : "info_04",
+			"value" : "Eine halbe Knoblauchzehe auf den gerösteten Baguettescheiben verreiben."
+		},{
+			"key" : "info_05",
+			"value" : "Nun wird etwas Öl auf den Baguettescheiben verteilt."
+		},{
+			"key" : "info_06",
+			"value" : "Die gewürfelten Tomaten auf den Baguettescheiben verteilen."
+		},{
+			"key" : "info_07",
+			"value" : "Jetzt kann das gehackte Basilikum über die Tomaten gestreut werden."
+		},{
+			"key" : "info_08",
+			"value" : "Die Bruschetta mit Salz und Pfeffer würzen."
+		},{
+			"key" : "info_09",
+			"value" : "Zum Schluss noch etwas Olivenöl über die Bruschetta geben."
+		},{
+			"key" : "info_10",
+			"value" : "Guten Appetit."
+		},{
+			"key" : "info_11",
+			"value" : "Den Knoblauch mit einem Messer abziehen."
+		},{
+			"key" : "info_12",
+			"value" : "Die Knoblauchzehe halbieren."
+		},{
+			"key" : "info_13",
+			"value" : "Die halbe Knoblauchzehe auf den gerösteten Baguettescheiben verreiben."
+		},{
+			"key" : "info_14",
+			"value" : "Mit dem Öl werden anfangs die gerösteten Baguettescheiben und später die fertige Bruschetta beträufelt."
+		},{
+			"key" : "info_15",
+			"value" : "Die Tomaten waschen."
+		},{
+			"key" : "info_16",
+			"value" : "Nun die Tomaten entkernen."
+		},{
+			"key" : "info_17",
+			"value" : "Tomaten in feine Würfel schneiden."
+		},{
+			"key" : "info_18",
+			"value" : "Die gewürfelten Tomaten auf den Baguettescheiben verteilen."
+		},{
+			"key" : "info_19",
+			"value" : "Das Basilikum waschen und trocken tupfen."
+		},{
+			"key" : "info_20",
+			"value" : "Das Basilikum mit Küchenpapier trocken tupfen."
+		},{
+			"key" : "info_21",
+			"value" : "Mit dem Messer fein hacken."
+		},{
+			"key" : "info_22",
+			"value" : "Jetzt kann das gehackte Basilikum über die Tomaten gestreut werden."
+		},{
+			"key" : "info_23",
+			"value" : "Die Bruschetta mit Salz würzen."
+		},{
+			"key" : "info_24",
+			"value" : "Die Bruschetta mit Pfeffer würzen."
+		}
+	],
+	"informations": [
+		{
+			"key": "info_00",
+			"value": "baguette_01"
+		},{
+			"key": "info_11",
+			"value": "knoblauch_02"
+		},{
+			"key": "info_14",
+			"value": "olivenoel_02"
+		},{
+			"key": "info_15",
+			"value": "tomaten_01"
+		},{
+			"key": "info_19",
+			"value": "basilikum_01"
+		},{
+			"key": "info_23",
+			"value": "salz_01"
+		},{
+			"key": "info_24",
+			"value": "pfeffer_01"
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Prima!\nDie Baguettescheiben kannst du\nnun im Ofen rösten."
+		},{
+			"key" : "feed_01",
+			"value" : "Super!\nDas Würfeln der Tomaten\nläuft ja schon ganz gut."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	]
+}
+
+EXAMPLE 3:
+
+Recipe Input:
+Mit Ziegencurry gefüllte Rote Bete in Karotten-Kürbis-Sauce 
+
+(für 4 Personen)
+
+8 kleine Rote Bete, 2 EL Zitronensaft
+Meersalz, Pfeffer aus der Mühle
+8 kleine Zwiebeln, 8 Knoblauchzehen
+2 Möhren (ca. 120 g), 4 kleine Knollensellerie
+50 g Ingwer, 8 Lauchzwiebeln
+12 Curryblätter, 8 Kardamomkapseln, 4 Nelken, 3 EL Arganöl
+ca. 360 g mageres Hackfleisch von jungen Ziegen, geeignet ist auch Lammhack
+einige Koriandersamen, 1 TL gemahlener Kurkuma
+je 1 Messerspitze gemahlener Zimt und Kreuzkümmel
+4 Tomaten
+
+Für die Karotten-Kürbis-Sauce:
+500 g Hokkaido-Kürbis, 8 Möhren (ca. 480 g)
+2 rote Chilischoten („Kaschmirchili“ oder „New-Mexico“)
+3 EL Arganöl, 1 l Kokosmilch
+
+Außerdem:
+120 g milder weicher Ziegenkäse, 1/2 Bund Korianderblätter
+
+Hinweis:
+Das Rezept ist für Kinder unter 14 Jahren zu scharf. Alternativ kannst du weniger der scharfen Zutaten (Chili, Knoblauch, Zwiebeln, Ingwer) verwenden oder diese ganz weglassen. Dadurch verändert sich allerdings auch der fein abgestimmte Geschmack des Gerichtes.
+
+1. Rote Bete in Gemüsebrühe (oder kochendem Salzwasser) 30-40 Minuten weich kochen. Kurz abkühlen lassen, dann schälen und mit einem Kugelausstecher aushöhlen. Mit Zitronensaft, Salz und Pfeffer mischen und mindestens 20 Minuten marinieren.
+2. Zwiebeln und Knoblauch abziehen. Möhren, Sellerie und Ingwer schälen. Lauchzwiebeln waschen, putzen und in Ringe schneiden. Sellerie und 2 Möhren waschen und klein würfeln. Zwiebeln, Knoblauch und Ingwer fein hacken, die Hälfte beiseite stellen. Die andere Hälfte mit klein geschnittenem Gemüse, Lauchzwiebeln, Curryblättern, Kardamom und Nelken in 3 EL heißem Öl bei kleiner Hitze andünsten. Das Ziegenfleisch hinzufügen und mitbraten. Koriander im Mörser zermahlen, Kurkuma, Zimt und Kreuzkümmel dazugeben, alles durchrühren und 5 Minuten weiterbraten.
+3. Die Tomaten waschen, entkernen, klein hacken und unterrühren. Salz hinzufügen. Die Curryblätter entfernen. Anschließend alles in die Rote Bete füllen. Backofen auf 170 °C (Gas Stufe 2) vorheizen.
+4. Für die Sauce den Kürbis waschen, entkernen und mit Schale in Stücke schneiden. Möhren schälen, waschen und klein schneiden. Chilis entkernen und waschen. Übrige Zwiebeln, Ingwer und Knoblauch im heißen Arganöl anschwitzen. Möhren, Kürbis und Chilis dazugeben. Mit Kokosmilch aufgießen, aufkochen und zugedeckt ca. 15 Minuten sehr weich dünsten. Die Chilis herausfischen und alles pürieren. Mit Salz und Pfeffer abschmecken (Erwachsene können mit ca. 1 EL Weißwein verfeinern). Die Sauce sollte recht flüssig sein, weil sie im Ofen noch etwas einkocht.
+5. Sauce in eine ofenfeste Form füllen, die Rote Bete hineinsetzen. Den Ziegenkäse in 8 Scheiben schneiden und als Deckel obenauf legen. Im Ofen 15-20 Minuten backen, mit Koriander dekorieren.
+
+Process.json
+
+{"tasks": [{
+	"name": "lauchzwiebelnGewaschen",
+	"info": "info_10a",
+	"openIcon": "common/lauchzwiebel",
+	"description": "desc_10a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/lauchzwiebel_cursor"
+}, {
+	"name": "topfMitTomatenUmgeruehrt",
+	"info": "info_68",
+	"customPositionOffsetMouse": "20 33",
+	"activeToDone": "0",
+	"hoverBitmap": "topf4",
+	"activePosition": "stoveRightTop",
+	"description": "desc_68",
+	"openIcon": "0802/topfMitTomatenUmgeruehrt",
+	"activeSound": "topfBrodelnLeise",
+	"activeTime": "4",
+	"openPosition": "stoveRightTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitTomatenUmgeruehrt_cursor"
+}, {
+	"name": "topfFuerZutaten1",
+	"info": "info_53",
+	"customPositionOffsetMouse": "20 5",
+	"openSound": "pfanneBrutzeln1",
+	"description": "desc_53",
+	"hoverBitmap": "topf4",
+	"openIcon": "common/topf4MitOel",
+	"customExtentOffsetMouse": "-40 -10",
+	"openPosition": "stoveRightTop"
+}, {
+	"name": "korianderGewaschen",
+	"info": "info_96",
+	"openIcon": "common/korianderGewaschen",
+	"description": "desc_96",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/korianderGewaschen_cursor"
+}, {
+	"name": "tellerMitRoteBete",
+	"info": "info_100",
+	"customPositionOffsetMouse": "10 46",
+	"description": "desc_100",
+	"hoverBitmap": "teller",
+	"openIcon": "0802/tellerMitRoteBete",
+	"donePosition": "countertopRightBottom",
+	"customExtentOffsetMouse": "-20 -100",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "karottenGeschaelt",
+	"info": "info_44",
+	"openIcon": "common/karottenGeschaeltUngewaschen",
+	"description": "desc_44",
+	"cursorBitmap": "common/karottenGeschaeltUngewaschen_cursor"
+}, {
+	"name": "kurkuma",
+	"info": "info_17",
+	"openIcon": "0802/kurkuma",
+	"description": "desc_17",
+	"cursorBitmap": "0802/kurkuma_cursor"
+}, {
+	"name": "topfMitBruehe",
+	"info": "info_28",
+	"activeTime": "4",
+	"activeToDone": "0",
+	"openPosition": "stoveLeftTop",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveLeftTop",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "0802/topfMitBruehe",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_28"
+}, {
+	"name": "tomatenGewaschen",
+	"info": "info_63",
+	"openIcon": "common/tomatenGewaschen",
+	"description": "desc_63",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomatenGewaschen_cursor"
+}, {
+	"name": "topfMitGemueseGewuerzt",
+	"info": "info_55a",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_55a",
+	"hoverBitmap": "topf4",
+	"activePosition": "stoveRightTop",
+	"openIcon": "0802/topfMitGemueseGewuerzt",
+	"activeSound": "pfanneBrutzeln2",
+	"activeTime": "4",
+	"openPosition": "stoveRightTop",
+	"activeToDone": "0",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitGemueseGewuerzt_cursor"
+}, {
+	"name": "topfFuerSauce",
+	"info": "info_78",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf2_leer",
+	"description": "desc_78",
+	"hoverBitmap": "topf2",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightBottom"
+}, {
+	"name": "roteBeteGeschaelt",
+	"info": "info_32",
+	"openIcon": "0802/roteBeteGeschaelt",
+	"description": "desc_32",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/roteBeteGeschaelt_cursor"
+}, {
+	"name": "topfMitTomaten",
+	"info": "info_67",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_67",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitTomaten",
+	"donePosition": "stoveRightTop",
+	"openPosition": "stoveRightTop",
+	"doneSound": "pfanneBrutzeln2",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitTomaten_cursor"
+}, {
+	"name": "topfMitKuerbis",
+	"info": "info_83",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_83",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitKuerbis",
+	"donePosition": "stoveRightBottom",
+	"openPosition": "stoveRightBottom",
+	"doneSound": "pfanneBrutzeln2",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitKuerbis_cursor"
+}, {
+	"name": "topfMitZwiebelnGar",
+	"info": "info_82",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"description": "desc_82",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitZwiebelnGar",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightBottom"
+}, {
+	"name": "sellerieGewaschen",
+	"info": "info_43a",
+	"openIcon": "common/sellerieKnolleGeputzt",
+	"description": "desc_43a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/sellerieKnolleGeputzt_cursor"
+}, {
+	"name": "topfMitFleischUmgeruehrt1",
+	"info": "info_59",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"feedback": "feed_04",
+	"hoverBitmap": "topf4",
+	"description": "desc_59",
+	"openIcon": "0802/topfMitFleischGebraten",
+	"speech": "0802_feedback_04",
+	"openPosition": "stoveRightTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitFleischGebraten_cursor"
+}, {
+	"name": "topfMitKuerbissauce",
+	"info": "info_85",
+	"activeTime": "5",
+	"activeToDone": "0",
+	"hoverBitmap": "topf2",
+	"activePosition": "stoveRightBottom",
+	"openIcon": "0802/topfMitKuerbissauce",
+	"activeSound": "topfBrodelnLeise",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_85"
+}, {
+	"name": "roteBeteGefuellt",
+	"info": "info_101",
+	"customPositionOffsetMouse": "10 46",
+	"description": "desc_101",
+	"openIcon": "0802/roteBeteGefuellt",
+	"customExtentOffsetMouse": "-20 -100",
+	"cursorBitmap": "0802/roteBeteGefuellt_cursor"
+}, {
+	"name": "topfMitFleisch",
+	"info": "info_57",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_57",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitFleisch",
+	"donePosition": "stoveRightTop",
+	"openPosition": "stoveRightTop",
+	"doneSound": "pfanneBrutzeln2",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitFleisch_cursor"
+}, {
+	"name": "roteBete",
+	"info": "info_06",
+	"openIcon": "0802/roteBete",
+	"description": "desc_06",
+	"cursorBitmap": "0802/roteBete_cursor"
+}, {
+	"name": "auflaufform",
+	"info": "info_71",
+	"customPositionOffsetMouse": "0 40",
+	"openIcon": "common/auflaufformLang",
+	"description": "desc_71",
+	"hoverBitmap": "auflaufformLang",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "0 -80",
+	"openPosition": "countertopLeftBottom"
+}, {
+	"name": "topfMitGemuese2",
+	"info": "info_81",
+	"activeTime": "4",
+	"activeToDone": "0",
+	"hoverBitmap": "topf2",
+	"activePosition": "stoveRightBottom",
+	"openIcon": "0802/topfMitZwiebeln",
+	"activeSound": "pfanneBrutzeln2",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_81"
+}, {
+	"name": "topfMitGemuese1",
+	"info": "info_54",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_54",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitGemuese",
+	"donePosition": "stoveRightTop",
+	"openPosition": "stoveRightTop",
+	"doneSound": "pfanneBrutzeln2",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitGemuese_cursor"
+}, {
+	"name": "chiliEntkernt",
+	"info": "info_76",
+	"openIcon": "0802/chiliEntkernt",
+	"description": "desc_76",
+	"cursorBitmap": "0802/chiliEntkernt_cursor"
+}, {
+	"name": "auflaufFertig",
+	"info": "info_95",
+	"openIcon": "0802/auflaufFertig",
+	"description": "desc_95"
+}, {
+	"name": "roteBeteAusgehohlt",
+	"info": "info_33",
+	"speech": "0802_feedback_00",
+	"feedback": "feed_00",
+	"openIcon": "0802/roteBeteAusgehohlt",
+	"cursorBitmap": "0802/roteBeteAusgehohlt_cursor",
+	"description": "desc_33"
+}, {
+	"name": "chiliGetrocknet",
+	"info": "info_77a",
+	"openIcon": "0802/chiliEntkernt",
+	"description": "desc_77a",
+	"cursorBitmap": "0802/chiliEntkernt_cursor"
+}, {
+	"name": "sellerie",
+	"info": "info_08",
+	"openIcon": "common/sellerieKnolle",
+	"description": "desc_08",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/sellerieKnolle_cursor"
+}, {
+	"name": "topfMitGewuerzenUmgeruehrt",
+	"info": "info_62",
+	"customPositionOffsetMouse": "20 33",
+	"activeToDone": "0",
+	"hoverBitmap": "topf4",
+	"activePosition": "stoveRightTop",
+	"description": "desc_62",
+	"openIcon": "0802/topfMitGewuerzenUmgeruehrt",
+	"activeSound": "pfanneBrutzeln2",
+	"activeTime": "8",
+	"openPosition": "stoveRightTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitGewuerzenUmgeruehrt_cursor"
+}, {
+	"name": "zwiebeln",
+	"info": "info_00",
+	"openIcon": "common/zwiebel",
+	"description": "desc_00",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zwiebel_cursor"
+}, {
+	"name": "korianderGetrocknet",
+	"info": "info_97",
+	"openIcon": "common/koriander",
+	"description": "desc_97",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/koriander_cursor"
+}, {
+	"name": "tomaten",
+	"info": "info_18",
+	"openIcon": "common/tomaten",
+	"description": "desc_18",
+	"cursorBitmap": "common/tomaten_cursor"
+}, {
+	"name": "topfMitFleischUmgeruehrt",
+	"info": "info_58",
+	"customPositionOffsetMouse": "20 33",
+	"activeToDone": "0",
+	"hoverBitmap": "topf4",
+	"activePosition": "stoveRightTop",
+	"description": "desc_58",
+	"openIcon": "0802/topfMitFleischUmgeruehrt",
+	"activeSound": "pfanneBrutzeln2",
+	"activeTime": "5",
+	"openPosition": "stoveRightTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitFleischUmgeruehrt_cursor"
+}, {
+	"name": "zitronensaft",
+	"info": "info_01",
+	"openIcon": "common/zitronensaft",
+	"description": "desc_01",
+	"cursorBitmap": "common/zitronensaft_cursor"
+}, {
+	"name": "roteBeteMariniert",
+	"info": "info_38",
+	"speech": "0802_feedback_01",
+	"feedback": "feed_01",
+	"openIcon": "0802/roteBeteMariniert",
+	"cursorBitmap": "0802/roteBeteMariniert_cursor",
+	"description": "desc_38"
+}, {
+	"name": "nelken",
+	"info": "info_13",
+	"openIcon": "0802/nelken",
+	"description": "desc_13",
+	"cursorBitmap": "0802/nelken_cursor"
+}, {
+	"name": "ingwer",
+	"info": "info_09",
+	"openIcon": "common/ingwer",
+	"description": "desc_09",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/ingwer_cursor"
+}, {
+	"name": "lauchzwiebelnGeputzt",
+	"info": "info_49",
+	"openIcon": "common/lauchzwiebelGeputzt",
+	"description": "desc_49",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/lauchzwiebelGeputzt_cursor"
+}, {
+	"name": "schuesselMitRoteBeteGewuerzt",
+	"info": "info_37",
+	"activeTime": "30",
+	"activeToDone": "0",
+	"openPosition": "countertopRightTop",
+	"hoverBitmap": "schuessel_gelb",
+	"activePosition": "countertopRightTop",
+	"customPositionOffsetMouse": "17 40",
+	"openIcon": "0802/schuesselMitRoteBeteGewuerzt",
+	"customExtentOffsetMouse": "-34 -80",
+	"description": "desc_37"
+}, {
+	"name": "sellerieGeschaelt",
+	"info": "info_43",
+	"openIcon": "common/sellerieKnolleGeputztUngewaschen",
+	"description": "desc_43",
+	"cursorBitmap": "common/sellerieKnolleGeputztUngewaschen_cursor"
+}, {
+	"name": "auflaufformMitRoteBete",
+	"info": "info_73",
+	"customPositionOffsetMouse": "0 40",
+	"description": "desc_73",
+	"hoverBitmap": "auflaufformLang",
+	"openIcon": "0802/auflaufformMitRoteBete",
+	"donePosition": "countertopLeftBottom",
+	"customExtentOffsetMouse": "0 -80",
+	"openPosition": "countertopLeftBottom"
+}, {
+	"name": "knoblauch",
+	"info": "info_05",
+	"openIcon": "common/knoblauchzehe",
+	"description": "desc_05",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchzehe_cursor"
+}, {
+	"name": "gemuesebruehe",
+	"info": "info_04",
+	"openIcon": "common/gemuesebruehe",
+	"description": "desc_04",
+	"cursorBitmap": "common/gemuesebruehe_cursor"
+}, {
+	"name": "kuerbisGewaschen",
+	"info": "info_74",
+	"openIcon": "0802/kuerbisGewaschen",
+	"description": "desc_74",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/kuerbisGewaschen_cursor"
+}, {
+	"name": "topfMitKuerbissauceFertig",
+	"info": "info_90",
+	"cursorHotspot": "30 50",
+	"customPositionOffsetMouse": "20 33",
+	"feedback": "feed_02",
+	"hoverBitmap": "topf2",
+	"description": "desc_90",
+	"openIcon": "0802/topfMitKuerbissauceFertig",
+	"donePosition": "stoveRightBottom",
+	"speech": "0802_feedback_02",
+	"openPosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitKuerbissauceFertig_cursor"
+}, {
+	"name": "topfMitOel2",
+	"info": "info_79",
+	"activeTime": "8",
+	"activeToDone": "0",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf2",
+	"activePosition": "stoveRightBottom",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf2MitButter",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_79"
+}, {
+	"name": "topfMitKuerbissauceOhneChili",
+	"info": "info_87",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_87",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitKuerbissauceOhneChili",
+	"donePosition": "stoveRightBottom",
+	"openPosition": "stoveRightBottom",
+	"doneSound": "topfBrodelnLeise",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitKuerbissauceOhneChili_cursor"
+}, {
+	"name": "ziegenkaeseGeschnitten",
+	"info": "info_92",
+	"openIcon": "0802/ziegenkaeseGeschnitten",
+	"description": "desc_92",
+	"cursorBitmap": "0802/ziegenkaeseGeschnitten_cursor"
+}, {
+	"name": "korianderGemahlen",
+	"info": "info_60",
+	"openIcon": "0802/korianderGemahlen",
+	"description": "desc_60",
+	"cursorBitmap": "0802/korianderGemahlen_cursor"
+}, {
+	"name": "topfMitGewuerzenGekocht",
+	"info": "info_66",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"openPosition": "stoveRightTop",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitGewuerzenUmgeruehrt",
+	"cursorBitmap": "0802/topfMitGewuerzenUmgeruehrt_cursor",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_66"
+}, {
+	"name": "sellerieGewuerfelt",
+	"info": "info_46",
+	"openIcon": "common/sellerieGewuerfelt",
+	"description": "desc_46",
+	"cursorBitmap": "common/sellerieGewuerfelt_cursor"
+}, {
+	"name": "korianderSamen",
+	"info": "info_16",
+	"openIcon": "0802/korianderSamen",
+	"description": "desc_16",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/korianderSamen_cursor"
+}, {
+	"name": "zwiebelnGewuerfelt",
+	"info": "info_40",
+	"openIcon": "common/zwiebelGewuerfelt",
+	"description": "desc_40",
+	"cursorBitmap": "common/zwiebelGewuerfelt_cursor"
+}, {
+	"name": "arganoel",
+	"info": "info_14",
+	"cursorHotspot": "15 20",
+	"openIcon": "common/arganoel",
+	"description": "desc_14",
+	"cursorBitmap": "common/arganoel_cursor"
+}, {
+	"name": "hackfleisch",
+	"info": "info_15",
+	"openIcon": "0802/hackfleisch",
+	"description": "desc_15",
+	"cursorBitmap": "0802/hackfleisch_cursor"
+}, {
+	"name": "zitronen",
+	"info": "info_01a",
+	"openIcon": "common/zitroneGanz",
+	"description": "desc_01a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zitroneGanz_cursor"
+}, {
+	"name": "kuerbisGeschnitten",
+	"info": "info_75",
+	"openIcon": "0802/kuerbisGeschnitten",
+	"description": "desc_75",
+	"cursorBitmap": "0802/kuerbisGeschnitten_cursor"
+}, {
+	"name": "zwiebelnGeringelt",
+	"info": "info_50",
+	"openIcon": "common/lauchzwiebelRinge",
+	"description": "desc_50",
+	"cursorBitmap": "common/lauchzwiebelRinge_cursor"
+}, {
+	"name": "lauchzwiebeln",
+	"info": "info_10",
+	"openIcon": "common/lauchzwiebelUngewaschen",
+	"description": "desc_10",
+	"cursorBitmap": "common/lauchzwiebelUngewaschen_cursor"
+}, {
+	"name": "topfFuerRoteBete",
+	"info": "info_29",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "topfBrodelnLeise",
+	"description": "desc_29",
+	"hoverBitmap": "topf1",
+	"openIcon": "0802/topfMitBruehe",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "meersalz",
+	"info": "info_03",
+	"openIcon": "common/salz",
+	"description": "desc_03",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "topfMitGemueseUmgeruehrt",
+	"info": "info_55",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"openPosition": "stoveRightTop",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitGemueseUmgeruehrt",
+	"cursorBitmap": "0802/topfMitGemueseUmgeruehrt_cursor",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_55"
+}, {
+	"name": "schuesselFuerRoteBete",
+	"info": "info_34",
+	"customPositionOffsetMouse": "17 40",
+	"openIcon": "common/schuessel_gelb",
+	"description": "desc_34",
+	"hoverBitmap": "schuessel_gelb",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-34 -80",
+	"openPosition": "countertopRightTop"
+}, {
+	"name": "roteBeteGekocht",
+	"info": "info_31",
+	"openIcon": "0802/roteBeteGekocht",
+	"description": "desc_31",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/roteBeteGekocht_cursor"
+}, {
+	"name": "schuesselMitRoteBete",
+	"info": "info_35",
+	"customPositionOffsetMouse": "17 40",
+	"description": "desc_35",
+	"hoverBitmap": "schuessel_gelb",
+	"openIcon": "0802/schuesselMitRoteBete",
+	"customExtentOffsetMouse": "-34 -80",
+	"openPosition": "countertopRightTop"
+}, {
+	"name": "karottenGewuerfelt",
+	"info": "info_47",
+	"openIcon": "common/karottenGewuerfelt",
+	"description": "desc_47",
+	"cursorBitmap": "common/karottenGewuerfelt_cursor"
+}, {
+	"name": "chili",
+	"info": "info_22",
+	"openIcon": "0802/chili",
+	"description": "desc_22",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/chili_cursor"
+}, {
+	"name": "tomatenEntkernt",
+	"info": "info_64",
+	"openIcon": "common/tomateEntkernt",
+	"description": "desc_64",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/tomateEntkernt_cursor"
+}, {
+	"name": "tellerFuerRoteBete",
+	"info": "info_99",
+	"openIcon": "common/tellerLeer",
+	"description": "desc_99",
+	"hoverBitmap": "teller",
+	"customPositionOffsetMouse": "10 46",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-20 -100",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "auflaufformMitKaese",
+	"info": "info_93",
+	"cursorHotspot": "85 75",
+	"activeTime": "6",
+	"description": "desc_93",
+	"activeIcon": "0802/auflaufformImOfen_small",
+	"hoverBitmap": "auflaufformLang",
+	"activePosition": "oven",
+	"openIcon": "0802/auflaufformMitKaese",
+	"donePosition": "oven",
+	"activeSound": "oven",
+	"openPosition": "countertopLeftBottom",
+	"activeToDone": "0",
+	"cursorBitmap": "0802/auflaufformMitKaese_cursor"
+}, {
+	"name": "auflaufformGebacken",
+	"info": "info_94",
+	"customPositionOffsetMouse": "0 40",
+	"openPosition": "countertopLeftBottom",
+	"hoverBitmap": "auflaufformLang",
+	"openIcon": "0802/auflaufformGebacken",
+	"cursorBitmap": "0802/auflaufformGebacken_cursor",
+	"customExtentOffsetMouse": "0 -80",
+	"description": "desc_94"
+}, {
+	"name": "topfMitTomatenOhneCurry",
+	"info": "info_70",
+	"cursorHotspot": "30 50",
+	"customPositionOffsetMouse": "20 33",
+	"feedback": "feed_03",
+	"hoverBitmap": "topf4",
+	"description": "desc_70",
+	"openIcon": "0802/topfMitTomatenOhneCurry",
+	"donePosition": "stoveRightTop",
+	"speech": "0802_feedback_03",
+	"openPosition": "stoveRightTop",
+	"doneSound": "topfBrodelnLeise",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitTomatenOhneCurry_cursor"
+}, {
+	"name": "tomatenGewuerfelt",
+	"info": "info_65",
+	"openIcon": "common/tomateGewuerfelt",
+	"description": "desc_65",
+	"cursorBitmap": "common/tomateGewuerfelt_cursor"
+}, {
+	"name": "topfMitRoteBete",
+	"info": "info_30",
+	"activeTime": "30",
+	"activeToDone": "0",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveLeftTop",
+	"openIcon": "0802/topfMitRoteBete",
+	"activeSound": "topfBrodelnLeise",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_30"
+}, {
+	"name": "knoblauchGehackt",
+	"info": "info_42",
+	"openIcon": "common/knoblauchGehackt",
+	"description": "desc_42",
+	"cursorBitmap": "common/knoblauchGehackt_cursor"
+}, {
+	"name": "kuerbis",
+	"info": "info_21",
+	"openIcon": "0802/kuerbis",
+	"description": "desc_21",
+	"cursorBitmap": "0802/kuerbis_cursor"
+}, {
+	"name": "ingwerGehackt",
+	"info": "info_48",
+	"openIcon": "common/ingwerGehackt",
+	"description": "desc_48",
+	"cursorBitmap": "common/ingwerGehackt_cursor"
+}, {
+	"name": "knoblauchGehaeutet",
+	"info": "info_41",
+	"openIcon": "common/knoblauchAbgezogen",
+	"description": "desc_41",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/knoblauchAbgezogen_cursor"
+}, {
+	"name": "ziegenkaese",
+	"info": "info_25",
+	"openIcon": "0802/ziegenkaese",
+	"description": "desc_25",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/ziegenkaese_cursor"
+}, {
+	"name": "zimt",
+	"info": "info_19",
+	"openIcon": "common/zimtpulver",
+	"description": "desc_19",
+	"cursorBitmap": "common/zimtpulver_cursor"
+}, {
+	"name": "topfMitOel",
+	"info": "info_52",
+	"activeTime": "8",
+	"activeToDone": "0",
+	"openPosition": "stoveRightTop",
+	"hoverBitmap": "topf4",
+	"activePosition": "stoveRightTop",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf4MitOel",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_52"
+}, {
+	"name": "karotten",
+	"info": "info_07",
+	"openIcon": "common/karotten",
+	"description": "desc_07",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/karotten_cursor"
+}, {
+	"name": "zwiebelnGehaeutet",
+	"info": "info_39",
+	"openIcon": "common/zwiebelAbgezogen",
+	"description": "desc_39",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zwiebelAbgezogen_cursor"
+}, {
+	"name": "topfMitGewuerzen",
+	"info": "info_61",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_61",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitGewuerzen",
+	"donePosition": "stoveRightTop",
+	"openPosition": "stoveRightTop",
+	"doneSound": "pfanneBrutzeln2",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitGewuerzen_cursor"
+}, {
+	"name": "topfMitTomatenGekocht",
+	"info": "info_69",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_69",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitTomatenGekocht",
+	"donePosition": "stoveRightTop",
+	"openPosition": "stoveRightTop",
+	"doneSound": "topfBrodelnLeise",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitTomatenGekocht_cursor"
+}, {
+	"name": "koriander",
+	"info": "info_26",
+	"openIcon": "common/koriander",
+	"description": "desc_26",
+	"cursorBitmap": "common/koriander_cursor"
+}, {
+	"name": "topfMitKuerbisUmgeruehrt",
+	"info": "info_84",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"description": "desc_84",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitKuerbisUmgeruehrt",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightBottom"
+}, {
+	"name": "schuesselMitZutaten1",
+	"info": "info_36",
+	"cursorHotspot": "70 40",
+	"cursorBitmap": "0802/schuesselMitZutaten1_cursor",
+	"openPosition": "countertopRightTop",
+	"hoverBitmap": "schuessel_gelb",
+	"customPositionOffsetMouse": "17 40",
+	"openIcon": "0802/schuesselMitZutaten1",
+	"donePosition": "countertopRightTop",
+	"customExtentOffsetMouse": "-34 -80",
+	"description": "desc_36"
+}, {
+	"name": "topfMitGemuese1Gekocht",
+	"info": "info_56",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"openPosition": "stoveRightTop",
+	"hoverBitmap": "topf4",
+	"openIcon": "0802/topfMitGemueseGekocht",
+	"cursorBitmap": "0802/topfMitGemueseGekocht_cursor",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_56"
+}, {
+	"name": "topfMitKuerbissauceGekocht",
+	"info": "info_86",
+	"cursorHotspot": "90 55",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_86",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitKuerbissauceGekocht",
+	"donePosition": "stoveRightBottom",
+	"openPosition": "stoveRightBottom",
+	"doneSound": "topfBrodelnLeise",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0802/topfMitKuerbissauceGekocht_cursor"
+}, {
+	"name": "curryblaetter",
+	"info": "info_11",
+	"openIcon": "0802/curryblaetter",
+	"description": "desc_11",
+	"cursorBitmap": "0802/curryblaetter_cursor"
+}, {
+	"name": "topfFuerGemuese",
+	"info": "info_51",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf4",
+	"description": "desc_51",
+	"hoverBitmap": "topf4",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightTop"
+}, {
+	"name": "topfMitKuerbissauceGewuerzt",
+	"info": "info_89",
+	"cursorHotspot": "90 55",
+	"cursorBitmap": "0802/topfMitKuerbissauceGewuerzt_cursor",
+	"openPosition": "stoveRightBottom",
+	"hoverBitmap": "topf2",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "0802/topfMitKuerbissauceGewuerzt",
+	"donePosition": "stoveRightBottom",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_89"
+}, {
+	"name": "kokosmilch",
+	"info": "info_23",
+	"openIcon": "common/milch",
+	"description": "desc_23",
+	"cursorBitmap": "common/milch_cursor"
+}, {
+	"name": "karottenGewaschen",
+	"info": "info_44a",
+	"openIcon": "common/karottenGeschaelt",
+	"description": "desc_44a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/karottenGeschaelt_cursor"
+}, {
+	"name": "kardamom",
+	"info": "info_12",
+	"openIcon": "0802/kardamom",
+	"description": "desc_12",
+	"cursorBitmap": "0802/kardamom_cursor"
+}, {
+	"name": "ingwerGeschaelt",
+	"info": "info_45",
+	"openIcon": "common/ingwerGeschaelt",
+	"description": "desc_45",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/ingwerGeschaelt_cursor"
+}, {
+	"name": "kuemmel",
+	"info": "info_20",
+	"openIcon": "common/kuemmelGemahlen",
+	"description": "desc_20",
+	"cursorBitmap": "common/kuemmelGemahlen_cursor"
+}, {
+	"name": "auflaufformMitSauce",
+	"info": "info_72",
+	"customPositionOffsetMouse": "0 40",
+	"description": "desc_72",
+	"hoverBitmap": "auflaufformLang",
+	"openIcon": "0802/auflaufformMitSauce",
+	"customExtentOffsetMouse": "0 -80",
+	"openPosition": "countertopLeftBottom"
+}, {
+	"name": "pfeffer",
+	"info": "info_02",
+	"openIcon": "common/pfeffer",
+	"description": "desc_02",
+	"cursorBitmap": "common/pfeffer_cursor"
+}, {
+	"name": "topfMitKuerbissaucePueriert",
+	"info": "info_88",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_88",
+	"hoverBitmap": "topf2",
+	"openIcon": "0802/topfMitKuerbissaucePueriert",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightBottom"
+}, {
+	"name": "chiliGewaschen",
+	"info": "info_77",
+	"openIcon": "0802/chiliGewaschen",
+	"description": "desc_77",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0802/chiliGewaschen_cursor"
+}, {
+	"name": "topfFuerZutaten2",
+	"info": "info_80",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln1",
+	"description": "desc_80",
+	"hoverBitmap": "topf2",
+	"openIcon": "common/topf2MitButter",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveRightBottom"
+}, {
+	"name": "topfFuerBruehe",
+	"info": "info_27",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf1_leer",
+	"description": "desc_27",
+	"hoverBitmap": "topf1",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}
+], "transitions": [{
+	"name": "transition (schneiden11)",
+	"parent": "tomatenGewaschen",
+	"child": "tomatenEntkernt",
+	"sound": "entkernen",
+	"minigameMaxScore": "24",
+	"tool": "messer",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (auto10)",
+	"parent": "topfMitGemueseGewuerzt",
+	"child": "topfMitGemuese1Gekocht",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (schaelen0)",
+	"parent": "roteBeteGekocht",
+	"child": "roteBeteGeschaelt",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "24",
+	"tool": "messer",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (schneiden14)",
+	"parent": "ziegenkaese",
+	"child": "ziegenkaeseGeschnitten",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (auto18)",
+	"parent": "topfFuerSauce",
+	"child": "topfMitOel2",
+	"automatic": "1"
+}, {
+	"name": "transition (move31)",
+	"parent": "zwiebelnGewuerfelt",
+	"child": "topfFuerZutaten2",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_zwiebeln2"
+}, {
+	"name": "transition (move14)",
+	"parent": "kardamom",
+	"child": "topfMitGemueseUmgeruehrt",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_kardamom"
+}, {
+	"name": "transition (auto5)",
+	"parent": "schuesselMitRoteBete",
+	"child": "schuesselMitZutaten1",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (puerieren0)",
+	"parent": "topfMitKuerbissauceOhneChili",
+	"child": "topfMitKuerbissaucePueriert",
+	"minigameMaxScore": "24",
+	"mandatory": "1",
+	"tool": "puerierstab",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "stoveRightBottom",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (pressen_01)",
+	"parent": "zitronen",
+	"child": "zitronensaft",
+	"tool": "presse",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (move7)",
+	"parent": "sellerieGewuerfelt",
+	"child": "topfFuerZutaten1",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_sellerie"
+}, {
+	"name": "transition (umruehren2)",
+	"parent": "topfMitFleisch",
+	"child": "topfMitFleischUmgeruehrt",
+	"tool": "loeffel",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "2",
+	"minigamePosition": "stoveRightTop",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (schneiden6)",
+	"parent": "ingwer",
+	"child": "ingwerGeschaelt",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (auto12a)",
+	"parent": "topfMitFleischUmgeruehrt",
+	"child": "topfMitFleischUmgeruehrt1",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto21)",
+	"parent": "topfMitGemuese2",
+	"child": "topfMitZwiebelnGar",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move41)",
+	"parent": "topfMitKuerbissauceFertig",
+	"child": "auflaufform",
+	"sound": "zutatMatschig",
+	"lob": "2"
+}, {
+	"name": "transition (move26)",
+	"parent": "topfMitTomatenOhneCurry",
+	"child": "tellerMitRoteBete",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (auto27)",
+	"parent": "auflaufformMitRoteBete",
+	"child": "auflaufformMitKaese",
+	"automatic": "1"
+}, {
+	"name": "transition (schneiden8)",
+	"parent": "karottenGewaschen",
+	"child": "karottenGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (entkernen0)",
+	"parent": "chili",
+	"child": "chiliEntkernt",
+	"sound": "entkernen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (schneiden10)",
+	"parent": "lauchzwiebelnGeputzt",
+	"child": "zwiebelnGeringelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (move17)",
+	"parent": "korianderGemahlen",
+	"child": "topfMitFleischUmgeruehrt1",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_koriander1"
+}, {
+	"name": "transition (move30)",
+	"parent": "ingwerGehackt",
+	"child": "topfFuerZutaten2",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_ingwer2"
+}, {
+	"name": "transition (schaelen1)",
+	"parent": "roteBeteGeschaelt",
+	"child": "roteBeteAusgehohlt",
+	"tool": "kugelausstecher",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (auto6)",
+	"parent": "schuesselMitRoteBeteGewuerzt",
+	"child": "roteBeteMariniert",
+	"automatic": "1"
+}, {
+	"name": "transition (move4)",
+	"parent": "meersalz",
+	"child": "schuesselMitRoteBete",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0802/additive_salz"
+}, {
+	"name": "transition (umruehren3)",
+	"parent": "topfMitGewuerzen",
+	"child": "topfMitGewuerzenUmgeruehrt",
+	"tool": "loeffel",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "2",
+	"minigamePosition": "stoveRightTop",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (schneiden7)",
+	"parent": "sellerieGewaschen",
+	"child": "sellerieGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (auto_roteBeteGefuellt)",
+	"parent": "tellerMitRoteBete",
+	"child": "roteBeteGefuellt",
+	"automatic": "1"
+}, {
+	"name": "transition (putzen0)",
+	"parent": "lauchzwiebelnGewaschen",
+	"child": "lauchzwiebelnGeputzt",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (schneiden9)",
+	"parent": "ingwerGeschaelt",
+	"child": "ingwerGehackt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (auto_roteBeteAufTeller)",
+	"parent": "tellerFuerRoteBete",
+	"child": "tellerMitRoteBete",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto24)",
+	"parent": "topfMitKuerbissauce",
+	"child": "topfMitKuerbissauceGekocht",
+	"automatic": "1"
+}, {
+	"name": "transition (move27)",
+	"parent": "kuerbis",
+	"child": "kuerbisGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move37)",
+	"parent": "topfMitKuerbissauceGekocht",
+	"child": "topfMitKuerbissauceOhneChili",
+	"sound": "schaumkelle",
+	"tool": "loeffel"
+}, {
+	"name": "transition (move16)",
+	"parent": "hackfleisch",
+	"child": "topfMitGemuese1Gekocht",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (auto7)",
+	"parent": "topfFuerGemuese",
+	"child": "topfMitOel",
+	"automatic": "1"
+}, {
+	"name": "transition (umruehren0)",
+	"parent": "schuesselMitZutaten1",
+	"child": "schuesselMitRoteBeteGewuerzt",
+	"tool": "loeffel",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "2",
+	"minigamePosition": "countertopRightTop",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (schneiden0)",
+	"parent": "zwiebeln",
+	"child": "zwiebelnGehaeutet",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (move25)",
+	"parent": "roteBeteMariniert",
+	"child": "tellerFuerRoteBete",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (auto17)",
+	"parent": "auflaufformMitSauce",
+	"child": "auflaufformMitRoteBete",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move19)",
+	"parent": "kurkuma",
+	"child": "topfMitFleischUmgeruehrt1",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_kurkuma"
+}, {
+	"name": "transition (move36)",
+	"parent": "kokosmilch",
+	"child": "topfMitKuerbisUmgeruehrt",
+	"sound": "abloeschen"
+}, {
+	"name": "transition (move_roteBeteInAuflaufform)",
+	"parent": "roteBeteGefuellt",
+	"child": "auflaufformMitSauce",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (move20)",
+	"parent": "kuemmel",
+	"child": "topfMitFleischUmgeruehrt1",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_kuemmel"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "lauchzwiebeln",
+	"child": "lauchzwiebelnGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move11)",
+	"parent": "ingwerGehackt",
+	"child": "topfFuerZutaten1",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_ingwer"
+}, {
+	"name": "transition (auto0)",
+	"parent": "topfFuerBruehe",
+	"child": "topfMitBruehe",
+	"automatic": "1"
+}, {
+	"name": "transition (move28)",
+	"parent": "chiliEntkernt",
+	"child": "chiliGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move44)",
+	"parent": "koriander",
+	"child": "korianderGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move2)",
+	"parent": "roteBeteAusgehohlt",
+	"child": "schuesselFuerRoteBete",
+	"sound": "etwasAufsBlech"
+}, {
+	"name": "transition (move29)",
+	"parent": "arganoel",
+	"child": "topfFuerSauce",
+	"sound": "oel"
+}, {
+	"name": "transition (auto8)",
+	"parent": "topfMitOel",
+	"child": "topfFuerZutaten1",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto16)",
+	"parent": "auflaufform",
+	"child": "auflaufformMitSauce",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move35)",
+	"parent": "chiliGetrocknet",
+	"child": "topfMitZwiebelnGar",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_chili"
+}, {
+	"name": "transition (move18)",
+	"parent": "zimt",
+	"child": "topfMitFleischUmgeruehrt1",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_zimt"
+}, {
+	"name": "transition (move42)",
+	"parent": "ziegenkaeseGeschnitten",
+	"child": "auflaufformMitRoteBete",
+	"sound": "blumeAufQuiche"
+}, {
+	"name": "transition (move39)",
+	"parent": "meersalz",
+	"child": "topfMitKuerbissaucePueriert",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0802/additive_salz3"
+}, {
+	"name": "transition (move8)",
+	"parent": "karottenGewuerfelt",
+	"child": "topfFuerZutaten1",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_karotten"
+}, {
+	"name": "transition (move21)",
+	"parent": "tomaten",
+	"child": "tomatenGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (move10)",
+	"parent": "knoblauchGehackt",
+	"child": "topfFuerZutaten1",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_knoblauch"
+}, {
+	"name": "transition (auto1)",
+	"parent": "topfMitBruehe",
+	"child": "topfFuerRoteBete",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto15)",
+	"parent": "topfMitTomatenUmgeruehrt",
+	"child": "topfMitTomatenGekocht",
+	"automatic": "1"
+}, {
+	"name": "transition (umruehren6)",
+	"parent": "topfMitKuerbissauceGewuerzt",
+	"child": "topfMitKuerbissauceFertig",
+	"tool": "loeffel",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "2",
+	"minigamePosition": "stoveRightBottom",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (schneiden2)",
+	"parent": "knoblauch",
+	"child": "knoblauchGehaeutet",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "16",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (move9)",
+	"parent": "zwiebelnGewuerfelt",
+	"child": "topfFuerZutaten1",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_zwiebeln"
+}, {
+	"name": "transition (move45)",
+	"parent": "korianderGewaschen",
+	"child": "korianderGetrocknet",
+	"tool": "papierrolle",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "cuttingboard"
+}, {
+	"name": "transition (auto9)",
+	"parent": "topfFuerZutaten1",
+	"child": "topfMitGemuese1",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (auto25)",
+	"parent": "topfMitKuerbissaucePueriert",
+	"child": "topfMitKuerbissauceGewuerzt",
+	"automatic": "1"
+}, {
+	"name": "transition (auto13)",
+	"parent": "topfMitGewuerzenUmgeruehrt",
+	"child": "topfMitGewuerzenGekocht",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move34)",
+	"parent": "kuerbisGeschnitten",
+	"child": "topfMitZwiebelnGar",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_kuerbis"
+}, {
+	"name": "transition (autoGewuerzeImgemuese)",
+	"parent": "topfMitGemueseUmgeruehrt",
+	"child": "topfMitGemueseGewuerzt",
+	"automatic": "1"
+}, {
+	"name": "transition (move22)",
+	"parent": "tomatenGewuerfelt",
+	"child": "topfMitGewuerzenGekocht",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_tomaten"
+}, {
+	"name": "transition (move13)",
+	"parent": "curryblaetter",
+	"child": "topfMitGemueseUmgeruehrt",
+	"sound": "blumeAufQuiche",
+	"additiveOpenIcon": "0802/additive_curryBlaetter"
+}, {
+	"name": "transition (waschen_01)",
+	"parent": "sellerieGeschaelt",
+	"child": "sellerieGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (schneiden3)",
+	"parent": "knoblauchGehaeutet",
+	"child": "knoblauchGehackt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (auto2)",
+	"parent": "topfFuerRoteBete",
+	"child": "topfMitRoteBete",
+	"automatic": "1"
+}, {
+	"name": "transition (umruehren1)",
+	"parent": "topfMitGemuese1",
+	"child": "topfMitGemueseUmgeruehrt",
+	"minigameMaxScore": "24",
+	"mandatory": "1",
+	"tool": "loeffel",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "stoveRightTop",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (move33)",
+	"parent": "karottenGewuerfelt",
+	"child": "topfMitZwiebelnGar",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_karotten2"
+}, {
+	"name": "transition (move0)",
+	"parent": "gemuesebruehe",
+	"child": "topfFuerBruehe",
+	"sound": "zutatFluessig"
+}, {
+	"name": "transition (auto14)",
+	"parent": "topfMitGewuerzenGekocht",
+	"child": "topfMitTomaten",
+	"automatic": "1"
+}, {
+	"name": "transition (auto22)",
+	"parent": "topfMitZwiebelnGar",
+	"child": "topfMitKuerbis",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (move3)",
+	"parent": "zitronensaft",
+	"child": "schuesselMitRoteBete",
+	"sound": "zutatFluessig",
+	"additiveOpenIcon": "0802/additive_zitronensaft"
+}, {
+	"name": "transition (auto12)",
+	"parent": "topfMitFleischUmgeruehrt1",
+	"child": "topfMitGewuerzen",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (move40)",
+	"parent": "pfeffer",
+	"child": "topfMitKuerbissaucePueriert",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0802/additive_pfeffer2"
+}, {
+	"name": "transition (move43)",
+	"parent": "korianderGetrocknet",
+	"child": "auflaufformGebacken",
+	"sound": "wuerzen"
+}, {
+	"name": "transition (auto28)",
+	"parent": "auflaufformMitKaese",
+	"child": "auflaufformGebacken",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move23)",
+	"parent": "meersalz",
+	"child": "topfMitGewuerzenGekocht",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0802/additive_salz2"
+}, {
+	"name": "transition (move12)",
+	"parent": "zwiebelnGeringelt",
+	"child": "topfFuerZutaten1",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_lauch"
+}, {
+	"name": "transition (auto3)",
+	"parent": "topfMitRoteBete",
+	"child": "roteBeteGekocht",
+	"automatic": "1"
+}, {
+	"name": "transition (move6)",
+	"parent": "arganoel",
+	"child": "topfFuerGemuese",
+	"sound": "oel"
+}, {
+	"name": "transition (umruehren4)",
+	"parent": "topfMitTomaten",
+	"child": "topfMitTomatenUmgeruehrt",
+	"tool": "loeffel",
+	"minigameAction": "circlePositive",
+	"minigameMaxTime": "2",
+	"minigamePosition": "stoveRightTop",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (waschen_02)",
+	"parent": "karottenGeschaelt",
+	"child": "karottenGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (schneiden13)",
+	"parent": "kuerbisGewaschen",
+	"child": "kuerbisGeschnitten",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (move1)",
+	"parent": "roteBete",
+	"child": "topfFuerRoteBete",
+	"sound": "wasserWurf"
+}, {
+	"name": "transition (schneiden4)",
+	"parent": "sellerie",
+	"child": "sellerieGeschaelt",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "24",
+	"tool": "messer",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (schneiden1)",
+	"parent": "zwiebelnGehaeutet",
+	"child": "zwiebelnGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (auto23)",
+	"parent": "topfMitKuerbisUmgeruehrt",
+	"child": "topfMitKuerbissauce",
+	"automatic": "1"
+}, {
+	"name": "transition (auto11)",
+	"parent": "topfMitGemuese1Gekocht",
+	"child": "topfMitFleisch",
+	"automatic": "1"
+}, {
+	"name": "transition (move24)",
+	"parent": "topfMitTomatenGekocht",
+	"child": "topfMitTomatenOhneCurry",
+	"sound": "schaumkelle",
+	"tool": "loeffel"
+}, {
+	"name": "transition (auto29)",
+	"parent": "auflaufformGebacken",
+	"child": "auflaufFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (move32)",
+	"parent": "knoblauchGehackt",
+	"child": "topfFuerZutaten2",
+	"sound": "zutatFruechte",
+	"additiveOpenIcon": "0802/additive_knoblauch2"
+}, {
+	"name": "transition (move15)",
+	"parent": "nelken",
+	"child": "topfMitGemueseUmgeruehrt",
+	"sound": "wuerzen",
+	"additiveOpenIcon": "0802/additive_nelken"
+}, {
+	"name": "transition (zermahlen0)",
+	"parent": "korianderSamen",
+	"child": "korianderGemahlen",
+	"tool": "moerser",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "24"
+}, {
+	"name": "transition (umruehren5)",
+	"parent": "topfMitKuerbis",
+	"child": "topfMitKuerbisUmgeruehrt",
+	"minigameMaxScore": "24",
+	"mandatory": "1",
+	"tool": "loeffel",
+	"minigameAction": "circlePositive",
+	"minigamePosition": "stoveRightBottom",
+	"minigameMaxTime": "2"
+}, {
+	"name": "transition (auto19)",
+	"parent": "topfMitOel2",
+	"child": "topfFuerZutaten2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (schneiden12)",
+	"parent": "tomatenEntkernt",
+	"child": "tomatenGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}, {
+	"name": "transition (auto4)",
+	"parent": "schuesselFuerRoteBete",
+	"child": "schuesselMitRoteBete",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move_trocknen)",
+	"parent": "chiliGewaschen",
+	"child": "chiliGetrocknet",
+	"tool": "papierrolle",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "cuttingboard"
+}, {
+	"name": "transition (move5)",
+	"parent": "pfeffer",
+	"child": "schuesselMitRoteBete",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0802/additive_pfeffer"
+}, {
+	"name": "transition (auto20)",
+	"parent": "topfFuerZutaten2",
+	"child": "topfMitGemuese2",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (schneiden5)",
+	"parent": "karotten",
+	"child": "karottenGeschaelt",
+	"tool": "schaeler",
+	"minigameAction": "leftRight",
+	"minigameMaxTime": "2",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "16"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Zwiebel"
+		},{
+			"key" : "desc_01",
+			"value" : "Zitronensaft"
+		},{
+			"key" : "desc_01a",
+			"value" : "Zitrone"
+		},{
+			"key" : "desc_02",
+			"value" : "Pfeffer"
+		},{
+			"key" : "desc_03",
+			"value" : "Meersalz"
+		},{
+			"key" : "desc_04",
+			"value" : "Gemüsebrühe"
+		},{
+			"key" : "desc_05",
+			"value" : "Knoblauchzehe"
+		},{
+			"key" : "desc_06",
+			"value" : "Rote Bete"
+		},{
+			"key" : "desc_07",
+			"value" : "Karotten"
+		},{
+			"key" : "desc_08",
+			"value" : "Sellerieknolle"
+		},{
+			"key" : "desc_09",
+			"value" : "Ingwer"
+		},{
+			"key" : "desc_10",
+			"value" : "Lauchzwiebeln"
+		},{
+			"key" : "desc_10a",
+			"value" : "Gewaschene Lauchzwiebeln"
+		},{
+			"key" : "desc_11",
+			"value" : "Curryblätter"
+		},{
+			"key" : "desc_12",
+			"value" : "Kardamomkapseln"
+		},{
+			"key" : "desc_13",
+			"value" : "Nelken"
+		},{
+			"key" : "desc_14",
+			"value" : "Arganöl"
+		},{
+			"key" : "desc_15",
+			"value" : "Ziegenhackfleisch"
+		},{
+			"key" : "desc_16",
+			"value" : "Koriandersamen"
+		},{
+			"key" : "desc_17",
+			"value" : "Gemahlener Kurkuma"
+		},{
+			"key" : "desc_18",
+			"value" : "Tomaten"
+		},{
+			"key" : "desc_19",
+			"value" : "Zimt"
+		},{
+			"key" : "desc_20",
+			"value" : "Kreuzkümmel"
+		},{
+			"key" : "desc_21",
+			"value" : "Hokkaido-Kürbis"
+		},{
+			"key" : "desc_22",
+			"value" : "Chilischoten"
+		},{
+			"key" : "desc_23",
+			"value" : "Kokosmilch"
+		},{
+			"key" : "desc_24",
+			"value" : "Weißwein"
+		},{
+			"key" : "desc_25",
+			"value" : "Ziegenkäse"
+		},{
+			"key" : "desc_26",
+			"value" : "Koriander"
+		},{
+			"key" : "desc_27",
+			"value" : "Topf für die Rote Bete"
+		},{
+			"key" : "desc_28",
+			"value" : "Topf für die Rote Bete"
+		},{
+			"key" : "desc_29",
+			"value" : "Topf für die Rote Bete"
+		},{
+			"key" : "desc_30",
+			"value" : "Topf für die Rote Bete"
+		},{
+			"key" : "desc_31",
+			"value" : "Gekochte Rote Bete"
+		},{
+			"key" : "desc_32",
+			"value" : "Geschälte Rote Bete"
+		},{
+			"key" : "desc_33",
+			"value" : "Ausgehöhlte Rote Bete"
+		},{
+			"key" : "desc_34",
+			"value" : "Schüssel für die Rote Bete"
+		},{
+			"key" : "desc_35",
+			"value" : "Schüssel für die Rote Bete"
+		},{
+			"key" : "desc_36",
+			"value" : "Schüssel für die Rote Bete"
+		},{
+			"key" : "desc_37",
+			"value" : "Schüssel für die Rote Bete"
+		},{
+			"key" : "desc_38",
+			"value" : "Marinierte Rote Bete"
+		},{
+			"key" : "desc_39",
+			"value" : "Abgezogene Zwiebel"
+		},{
+			"key" : "desc_40",
+			"value" : "Gehackte Zwiebel"
+		},{
+			"key" : "desc_41",
+			"value" : "Abgezogener Knoblauch"
+		},{
+			"key" : "desc_42",
+			"value" : "Gehackter Knoblauch"
+		},{
+			"key" : "desc_43",
+			"value" : "Geschälter Sellerie"
+		},{
+			"key" : "desc_43a",
+			"value" : "Gewaschener Sellerie"
+		},{
+			"key" : "desc_44",
+			"value" : "Geschälte Karotten"
+		},{
+			"key" : "desc_44a",
+			"value" : "Gewaschene Karotten"
+		},{
+			"key" : "desc_45",
+			"value" : "Geschälter Ingwer"
+		},{
+			"key" : "desc_46",
+			"value" : "Gewürfelter Sellerie"
+		},{
+			"key" : "desc_47",
+			"value" : "Gewürfelte Karotten"
+		},{
+			"key" : "desc_48",
+			"value" : "Gehackter Ingwer"
+		},{
+			"key" : "desc_49",
+			"value" : "Geputzte Lauchzwiebeln"
+		},{
+			"key" : "desc_50",
+			"value" : "Lauchzwiebelringe"
+		},{
+			"key" : "desc_51",
+			"value" : "Topf für das Gemüse"
+		},{
+			"key" : "desc_52",
+			"value" : "Topf mit heißem Öl"
+		},{
+			"key" : "desc_53",
+			"value" : "Topf für das Gemüse"
+		},{
+			"key" : "desc_54",
+			"value" : "Topf mit Gemüse"
+		},{
+			"key" : "desc_55",
+			"value" : "Topf mit Gemüse"
+		},{
+			"key" : "desc_55a",
+			"value" : "Topf mit Gemüse und Gewürzen"
+		},{
+			"key" : "desc_56",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_57",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_58",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_59",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_60",
+			"value" : "Gemahlener Koriander"
+		},{
+			"key" : "desc_61",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_62",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_63",
+			"value" : "Gewaschene Tomaten"
+		},{
+			"key" : "desc_64",
+			"value" : "Entkernte Tomaten"
+		},{
+			"key" : "desc_65",
+			"value" : "Gewürfelte Tomaten"
+		},{
+			"key" : "desc_66",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_67",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_68",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_69",
+			"value" : "Topf für das Ziegencurry"
+		},{
+			"key" : "desc_70",
+			"value" : "Topf mit Ziegencurry"
+		},{
+			"key" : "desc_71",
+			"value" : "Auflaufform"
+		},{
+			"key" : "desc_72",
+			"value" : "Auflaufform mit Sauce"
+		},{
+			"key" : "desc_73",
+			"value" : "Auflaufform mit Rote Bete"
+		},{
+			"key" : "desc_74",
+			"value" : "Gewaschener Kürbis"
+		},{
+			"key" : "desc_75",
+			"value" : "Geschnittener Kürbis"
+		},{
+			"key" : "desc_76",
+			"value" : "Entkernte Chilischoten"
+		},{
+			"key" : "desc_77",
+			"value" : "Gewaschene Chilischoten"
+		},{
+			"key" : "desc_77a",
+			"value" : "Chilischoten"
+		},{
+			"key" : "desc_78",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_79",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_80",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_81",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_82",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_83",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_84",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_85",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_86",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_87",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_88",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_89",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_90",
+			"value" : "Karotten-Kürbis-Sauce"
+		},{
+			"key" : "desc_92",
+			"value" : "Geschnittener Ziegenkäse"
+		},{
+			"key" : "desc_93",
+			"value" : "Rote Bete mit Ziegencurry in der Auflaufform"
+		},{
+			"key" : "desc_94",
+			"value" : "Gebackener Auflauf"
+		},{
+			"key" : "desc_95",
+			"value" : "Fertiger Auflauf"
+		},{
+			"key" : "desc_96",
+			"value" : "Gewaschener Koriander"
+		},{
+			"key" : "desc_97",
+			"value" : "Abgetrockneter Koriander"
+		},{
+			"key" : "desc_99",
+			"value" : "Teller"
+		},{
+			"key" : "desc_100",
+			"value" : "Teller mit Rote Bete"
+		},{
+			"key" : "desc_101",
+			"value" : "Mit Ziegencurry gefüllte Rote Bete"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Die Zwiebel wird mit dem Messer abgezogen."
+		},{
+			"key" : "info_01",
+			"value" : "Mit dem Zitronensaft wird die Rote Bete mariniert."
+		},{
+			"key" : "info_01a",
+			"value" : "Mit der Presse auspressen."
+		},{
+			"key" : "info_02",
+			"value" : "Zum Würzen."
+		},{
+			"key" : "info_03",
+			"value" : "Zum Würzen."
+		},{
+			"key" : "info_04",
+			"value" : "Die Gemüsebrühe in den Topf für die Rote Bete geben und zum Kochen bringen."
+		},{
+			"key" : "info_05",
+			"value" : "Den Knoblauch mit dem Messer abziehen."
+		},{
+			"key" : "info_06",
+			"value" : "In den Topf mit der kochenden Brühe geben."
+		},{
+			"key" : "info_07",
+			"value" : "Die Karotten werden mit dem Schäler geschält."
+		},{
+			"key" : "info_08",
+			"value" : "Der Sellerie wird mit dem Messer geschält."
+		},{
+			"key" : "info_09",
+			"value" : "Der Ingwer wird mit dem Messer geschält."
+		},{
+			"key" : "info_10",
+			"value" : "Die Lauchzwiebeln erst mal waschen."
+		},{
+			"key" : "info_10a",
+			"value" : "Die Lauchzwiebeln werden mit dem Messer geputzt."
+		},{
+			"key" : "info_11",
+			"value" : "Die Curryblätter in den Topf zum Gemüse geben."
+		},{
+			"key" : "info_12",
+			"value" : "Die Kardamomkapseln in den Topf zum Gemüse geben."
+		},{
+			"key" : "info_13",
+			"value" : "Die Nelken in den Topf zum Gemüse geben."
+		},{
+			"key" : "info_14",
+			"value" : "Das Arganöl wird für das Gemüse und für die Sauce verwendet."
+		},{
+			"key" : "info_15",
+			"value" : "Das Ziegenhackfleisch muss in das angedünstete Gemüse gegeben werden."
+		},{
+			"key" : "info_16",
+			"value" : "Die Koriandersamen werden mit dem Mörser zermahlen."
+		},{
+			"key" : "info_17",
+			"value" : "Den Kurkuma in den Gemüsetopf zum Fleisch geben."
+		},{
+			"key" : "info_18",
+			"value" : "Die Tomaten werden zunächst gewaschen."
+		},{
+			"key" : "info_19",
+			"value" : "Den Zimt in den Gemüsetopf zum Fleisch geben."
+		},{
+			"key" : "info_20",
+			"value" : "Den Kreuzkümmel in den Gemüsetopf zum Fleisch geben."
+		},{
+			"key" : "info_21",
+			"value" : "Der Kürbis wird zunächst gewaschen."
+		},{
+			"key" : "info_22",
+			"value" : "Die Chilischoten müssen mit dem Messer entkernt werden."
+		},{
+			"key" : "info_23",
+			"value" : "Die Kokosmilch in den Topf für die Sauce geben."
+		},{
+			"key" : "info_24",
+			"value" : "Den Weißwein in die pürierte Sauce geben."
+		},{
+			"key" : "info_25",
+			"value" : "Der Ziegenkäse wird in Scheiben geschnitten."
+		},{
+			"key" : "info_26",
+			"value" : "Der Koriander soll gewaschen werden."
+		},{
+			"key" : "info_27",
+			"value" : "Die Gemüsebrühe in den Topf geben und erhitzen lassen."
+		},{
+			"key" : "info_28",
+			"value" : "Die Brühe zum Kochen bringen."
+		},{
+			"key" : "info_29",
+			"value" : "Die Rote Bete dazugeben."
+		},{
+			"key" : "info_30",
+			"value" : "Die Rote Bete weich kochen lassen."
+		},{
+			"key" : "info_31",
+			"value" : "Die Rote Bete muss mit dem Messer geschält werden."
+		},{
+			"key" : "info_32",
+			"value" : "Die Rote Bete wird mit dem Kugelausstecher ausgehöhlt."
+		},{
+			"key" : "info_33",
+			"value" : "Die Rote Bete kann nun in die Schüssel zum Marinieren gelegt werden."
+		},{
+			"key" : "info_34",
+			"value" : "Hier die ausgehöhlte Rote Bete zum Marinieren hinein legen."
+		},{
+			"key" : "info_35",
+			"value" : "Salz, Pfeffer und Zitronensaft hinzugeben."
+		},{
+			"key" : "info_36",
+			"value" : "Alles umrühren."
+		},{
+			"key" : "info_37",
+			"value" : "Die Rote Bete wird nun mariniert."
+		},{
+			"key" : "info_38",
+			"value" : "Die Rote Bete kann jetzt auf den Teller gesetzt werden, um sie mit Ziegencurry zu füllen."
+		},{
+			"key" : "info_39",
+			"value" : "Die Zwiebel fein hacken."
+		},{
+			"key" : "info_40",
+			"value" : "Eine Hälfte in den Gemüsetopf, die andere Hälfte in den Topf für die Sauce geben."
+		},{
+			"key" : "info_41",
+			"value" : "Der Knoblauch wird fein gehackt."
+		},{
+			"key" : "info_42",
+			"value" : "Eine Hälfte in den Gemüsetopf, die andere Hälfte in den Topf für die Sauce geben."
+		},{
+			"key" : "info_43",
+			"value" : "Den Sellerie gründlich waschen."
+		},{
+			"key" : "info_43a",
+			"value" : "Der Sellerie wird klein gewürfelt."
+		},{
+			"key" : "info_44",
+			"value" : "Die Karotten gründlich waschen."
+		},{
+			"key" : "info_44a",
+			"value" : "Die Karotten werden klein gewürfelt."
+		},{
+			"key" : "info_45",
+			"value" : "Der Ingwer wird fein gehackt."
+		},{
+			"key" : "info_46",
+			"value" : "In den Topf für das Gemüse mit heißem Öl geben."
+		},{
+			"key" : "info_47",
+			"value" : "Eine Hälfte in den Gemüsetopf, die andere Hälfte in den Topf für die Sauce geben."
+		},{
+			"key" : "info_48",
+			"value" : "Eine Hälfte in den Gemüsetopf, die andere Hälfte in den Topf für die Sauce geben."
+		},{
+			"key" : "info_49",
+			"value" : "Die Lauchzwiebeln werden in kleine Ringe geschnitten."
+		},{
+			"key" : "info_50",
+			"value" : "In den Gemüsetopf mit heißem Öl geben."
+		},{
+			"key" : "info_51",
+			"value" : "Hier das Arganöl hineingeben und erhitzen lassen."
+		},{
+			"key" : "info_52",
+			"value" : "Das Öl wird erhitzt."
+		},{
+			"key" : "info_53",
+			"value" : "Hier gehackte Zwiebeln und Knoblauch, gewürfelten Sellerie, Karotten, Ingwer und Lauchzwiebelringe hineingeben."
+		},{
+			"key" : "info_54",
+			"value" : "Nun wird alles umgerührt."
+		},{
+			"key" : "info_55",
+			"value" : "Jetzt können die Gewürze Kardamom, Curryblätter und Nelken hinzugegeben werden."
+		},{
+			"key" : "info_55a",
+			"value" : "Das Gemüse kurz andünsten."
+		},{
+			"key" : "info_56",
+			"value" : "Das Hackfleisch hinzugeben."
+		},{
+			"key" : "info_57",
+			"value" : "Erneut umrühren."
+		},{
+			"key" : "info_58",
+			"value" : "Das Hackfleisch mitbraten lassen."
+		},{
+			"key" : "info_59",
+			"value" : "Hier werden Kurkuma, Kümmel, Zimt und gemahlenen Koriander hineingegeben."
+		},{
+			"key" : "info_60",
+			"value" : "Der gemahlene Koriander wird in den Gemüsetopf zum Fleisch gegeben."
+		},{
+			"key" : "info_61",
+			"value" : "Erneut gut umrühren."
+		},{
+			"key" : "info_62",
+			"value" : "Weiter braten lassen."
+		},{
+			"key" : "info_63",
+			"value" : "Die Tomaten werden mit dem Messer entkernt."
+		},{
+			"key" : "info_64",
+			"value" : "Nun werden die Tomaten gewürfelt."
+		},{
+			"key" : "info_65",
+			"value" : "In den Gemüsetopf zum gewürzten Fleisch geben."
+		},{
+			"key" : "info_66",
+			"value" : "Salzen und die gewürfelten Tomaten hinzugeben."
+		},{
+			"key" : "info_67",
+			"value" : "Nun wird alles umgerührt."
+		},{
+			"key" : "info_68",
+			"value" : "Die Tomaten zerkochen lassen."
+		},{
+			"key" : "info_69",
+			"value" : "Nun die Curryblätter mit dem Löffel heraus holen."
+		},{
+			"key" : "info_70",
+			"value" : "Hiermit die marinierte Rote Bete füllen."
+		},{
+			"key" : "info_71",
+			"value" : "Hier wird die Karotten-Kürbis-Sauce eingefüllt."
+		},{
+			"key" : "info_72",
+			"value" : "Nun die gefüllte Rote Bete in die Sauce setzen."
+		},{
+			"key" : "info_73",
+			"value" : "Den Ziegenkäse als Deckel auf die Rote Bete legen."
+		},{
+			"key" : "info_74",
+			"value" : "Entkernen und in Stücke schneiden."
+		},{
+			"key" : "info_75",
+			"value" : "Die Kürbisstücke in den Topf für die Sauce geben, wenn Zwiebeln, Ingwer und Knoblauch angeschwitzt sind."
+		},{
+			"key" : "info_76",
+			"value" : "Die Chilischoten sollten nun gewaschen werden."
+		},{
+			"key" : "info_77",
+			"value" : "Nach dem Waschen mit Küchenpapier trocken tupfen."
+		},{
+			"key" : "info_77a",
+			"value" : "Die Chilischoten in den Topf für die Sauce geben, wenn Zwiebeln, Ingwer und Knoblauch angeschwitzt sind."
+		},{
+			"key" : "info_78",
+			"value" : "Hier das Arganöl hineingeben und erhitzen lassen."
+		},{
+			"key" : "info_79",
+			"value" : "Öl hineingeben und erhitzen lassen."
+		},{
+			"key" : "info_80",
+			"value" : "Gehackten Knoblauch, Zwiebeln und Ingwer hineingeben und andünsten."
+		},{
+			"key" : "info_81",
+			"value" : "Kurz dünsten lassen."
+		},{
+			"key" : "info_82",
+			"value" : "Hier den geschnittenen Kürbis, die Karotten und die Chilischoten hineingeben."
+		},{
+			"key" : "info_83",
+			"value" : "Nun wird alles umgerührt."
+		},{
+			"key" : "info_84",
+			"value" : "Nun wird die Kokosmilch dazugegeben."
+		},{
+			"key" : "info_85",
+			"value" : "Zugedeckt dünsten lassen."
+		},{
+			"key" : "info_86",
+			"value" : "Mit dem Löffel werden die Chilischoten herausgenommen."
+		},{
+			"key" : "info_87",
+			"value" : "Die Sauce wird püriert."
+		},{
+			"key" : "info_88",
+			"value" : "Mit Salz und Pfeffer abschmecken."
+		},{
+			"key" : "info_89",
+			"value" : "Erneut gut umrühren."
+		},{
+			"key" : "info_90",
+			"value" : "In die Auflaufform füllen."
+		},{
+			"key" : "info_92",
+			"value" : "In die Auflaufform über die gefüllte Rote Bete geben."
+		},{
+			"key" : "info_93",
+			"value" : "Im Ofen backen lassen."
+		},{
+			"key" : "info_94",
+			"value" : "Mit Korianderzweigen dekorieren."
+		},{
+			"key" : "info_95",
+			"value" : "Genießen."
+		},{
+			"key" : "info_96",
+			"value" : "Der Koriander wird mit Küchenpapier trocken getupft."
+		},{
+			"key" : "info_97",
+			"value" : "Als Dekoration für die gebackene Rote Bete verwenden."
+		},{
+			"key" : "info_99",
+			"value" : "Die marinierte Rote Bete auf den Teller setzen und mit dem Ziegencurry füllen."
+		},{
+			"key" : "info_101",
+			"value" : "In die Auflaufform zur Sauce geben."
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Prima!\nDie Rote Bete ist fertig.\nDu kannst sie nun in die Schüssel\nzum Marinieren geben."
+		},{
+			"key" : "feed_01",
+			"value" : "Toll, die Rote Bete\nkann nun zum Füllen\nin die Auflaufform."
+		},{
+			"key" : "feed_02",
+			"value" : "Die Sauce ist fertig."
+		},{
+			"key" : "feed_03",
+			"value" : "Sehr schön.\nMit der Currymasse kannst du\nnun die Rote Bete füllen."
+		},{
+			"key" : "feed_04",
+			"value" : "Gut gemacht,\ndie Curryfüllung ist\nschon fast fertig."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	],
+	"informations": [
+		{
+			"key" : "info_00",
+			"value" : "zwiebeln_01"
+		},{
+			"key" : "info_01a",
+			"value" : "zitrone_01"
+		},{
+			"key" : "info_02",
+			"value" : "pfeffer_07"
+		},{
+			"key" : "info_03",
+			"value" : "meersalz_03"
+		},{
+			"key" : "info_04",
+			"value" : "gemuesebruehe_01"
+		},{
+			"key" : "info_05",
+			"value" : "knoblauch_02"
+		},{
+			"key" : "info_06",
+			"value" : "roteBete_01"
+		},{
+			"key" : "info_07",
+			"value" : "karotten_05"
+		},{
+			"key" : "info_08",
+			"value" : "knollensellerie_01"
+		},{
+			"key" : "info_09",
+			"value" : "ingwer_03"
+		},{
+			"key" : "info_10",
+			"value" : "lauchzwiebeln_01"
+		},{
+			"key" : "info_11",
+			"value" : "curryblaetter_01"
+		},{
+			"key" : "info_12",
+			"value" : "kardamomkapseln_01"
+		},{
+			"key" : "info_13",
+			"value" : "nelken_01"
+		},{
+			"key" : "info_14",
+			"value" : "arganoel_01"
+		},{
+			"key" : "info_15",
+			"value" : "ziegenhackfleisch_01"
+		},{
+			"key" : "info_16",
+			"value" : "koriandersamen_01"
+		},{
+			"key" : "info_17",
+			"value" : "kurkumaGemahlen_01"
+		},{
+			"key" : "info_18",
+			"value" : "tomaten_01"
+		},{
+			"key" : "info_19",
+			"value" : "zimt_01"
+		},{
+			"key" : "info_20",
+			"value" : "kreuzkuemmel_01"
+		},{
+			"key" : "info_21",
+			"value" : "hokkaidoKuerbis_01"
+		},{
+			"key" : "info_22",
+			"value" : "chilischoten_01"
+		},{
+			"key" : "info_23",
+			"value" : "kokosraspel_01"
+		},{
+			"key" : "info_25",
+			"value" : "ziegenkaese_01"
+		},{
+			"key" : "info_26",
+			"value" : "koriander_01"
+		}
+	]
+}
+
+EXAMPLE 4:
+
+Recipe input:
+Radieschensuppe
+
+(für 4 Personen)
+
+3/4 l Gemüsebrühe
+3-4 Bund Radieschen (ca. 400 g ohne Grün)
+2 EL Zitronensaft
+1 Zwiebel
+2 EL Butter
+3 EL weißer Balsamico-Essig
+1/4 l Schlagsahne
+Meersalz
+Pfeffer aus der Mühle 
+ein kleines Stück frischer Meerrettich, falls die Radieschen nicht scharf genug sind
+
+1. Radieschen putzen, waschen, halbieren und mit Zitronensaft beträufeln. 
+2. Zwiebel abziehen, fein würfeln und in heißer Butter andünsten. Radieschen hinzugeben, mit Essig ablöschen.
+3. Die Gemüsebrühe und die Sahne angießen, aufkochen. Zugedeckt bei kleiner Hitze 15-20 Minuten garen.
+4. Wenn die Radieschen gar sind, sofort pürieren, wegen der Farbe lieber sogar etwas früher (evtl. mit Rote-Bete-Saft nachhelfen).
+5. Mit Salz und Pfeffer abschmecken. Frischen Meerrettich schälen und erst kurz vorm Servieren reiben und in den Teller geben, da er sonst braun wird. Dann die Suppe drübergeben.
+
+Sarahs Tipp:
+Ich halte Meerrettich schön weiß, indem ich viel Zitronensaft drüberträufle. Du kannst ihn auch gut mit ein bisschen geschlagener Sahne mischen. Ein Klecks auf die Suppe - das sieht sehr schön aus.
+
+Process.json:
+{"tasks": [{
+	"name": "tellerMitRettich",
+	"info": "info_31",
+	"customPositionOffsetMouse": "10 47",
+	"description": "desc_31",
+	"hoverBitmap": "tellerTief",
+	"openIcon": "0201/tellerMitRettich",
+	"customExtentOffsetMouse": "-20 -80",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "topfMitFond",
+	"info": "info_23",
+	"activeTime": "10",
+	"activeToDone": "0",
+	"activeIcon": "0201/topfMitFondDeckel",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveLeftTop",
+	"openIcon": "0201/topfMitFond",
+	"activeSound": "topfBrodelnLeise",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_23"
+}, {
+	"name": "fond",
+	"info": "info_21",
+	"openIcon": "common/gemuesebruehe",
+	"description": "desc_21",
+	"cursorBitmap": "common/gemuesebruehe_cursor"
+}, {
+	"name": "zitrone",
+	"info": "info_01a",
+	"openIcon": "common/zitroneGanz",
+	"description": "desc_01a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zitroneGanz_cursor"
+}, {
+	"name": "schaleMitRadieschen",
+	"info": "info_05",
+	"customPositionOffsetMouse": "17 40",
+	"description": "desc_05",
+	"hoverBitmap": "schuessel_rot",
+	"openIcon": "0201/schuesselRadieschen",
+	"customExtentOffsetMouse": "-34 -80",
+	"openPosition": "countertopLeftTop"
+}, {
+	"name": "radieschenGewaschen",
+	"info": "info_02a",
+	"openIcon": "0201/radieschenGeputzt",
+	"description": "desc_02a",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0201/radieschenGeputzt_cursor"
+}, {
+	"name": "zwiebelnGewuerfelt",
+	"info": "info_10",
+	"openIcon": "common/zwiebelGewuerfelt",
+	"description": "desc_10",
+	"cursorBitmap": "common/zwiebelGewuerfelt_cursor"
+}, {
+	"name": "topfMitZwiebelnFertig",
+	"info": "info_16",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"description": "desc_16",
+	"hoverBitmap": "topf1",
+	"openIcon": "0201/topfMitZwiebeln",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "schaleMitRadieschenZitrone",
+	"info": "info_06",
+	"cursorHotspot": "15 75",
+	"customPositionOffsetMouse": "17 40",
+	"feedback": "feed_00",
+	"hoverBitmap": "schuessel_rot",
+	"description": "desc_06",
+	"openIcon": "0201/schuesselRadieschenZitrone",
+	"donePosition": "countertopLeftTop",
+	"speech": "0201_feedback_00",
+	"openPosition": "countertopLeftTop",
+	"customExtentOffsetMouse": "-34 -80",
+	"cursorBitmap": "0201/schuesselRadieschenZitrone_cursor"
+}, {
+	"name": "zwiebeln",
+	"info": "info_08",
+	"openIcon": "common/zwiebel",
+	"description": "desc_08",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zwiebel_cursor"
+}, {
+	"name": "topfMitZwiebelnRadieschenFertig",
+	"info": "info_22",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "topfBrodelnLeise",
+	"description": "desc_22",
+	"hoverBitmap": "topf1",
+	"openIcon": "0201/topfMitRadieschenFertig",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "sahne",
+	"info": "info_20",
+	"cursorHotspot": "64 70",
+	"openIcon": "common/sahne",
+	"description": "desc_20",
+	"cursorBitmap": "common/sahne_cursor"
+}, {
+	"name": "topfMitFondPueriert",
+	"info": "info_24",
+	"customPositionOffsetMouse": "20 33",
+	"description": "desc_24",
+	"hoverBitmap": "topf1",
+	"openIcon": "0201/topfMitFondPuriert",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "tellerFuerRettich",
+	"info": "info_30",
+	"customPositionOffsetMouse": "10 47",
+	"openIcon": "common/suppeTief_leer",
+	"description": "desc_30",
+	"hoverBitmap": "tellerTief",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-20 -80",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "topfFuerZwiebeln",
+	"info": "info_11",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "common/topf1_leer",
+	"description": "desc_11",
+	"hoverBitmap": "topf1",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "zitronensaft",
+	"info": "info_01",
+	"openIcon": "common/zitronensaft",
+	"description": "desc_01",
+	"cursorBitmap": "common/zitronensaft_cursor"
+}, {
+	"name": "topfMitZwiebeln",
+	"info": "info_15",
+	"activeTime": "12",
+	"activeToDone": "0",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveLeftTop",
+	"openIcon": "0201/topfMitZwiebeln",
+	"activeSound": "pfanneBrutzeln2",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_15"
+}, {
+	"name": "topfMitZwiebelnRadieschen",
+	"info": "info_17",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln2",
+	"description": "desc_17",
+	"hoverBitmap": "topf1",
+	"openIcon": "0201/topfMitRadieschen",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "meerrettichGeschaelt",
+	"info": "info_29",
+	"openIcon": "common/meerrettichGeschaelt",
+	"description": "desc_29",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/meerrettichGeschaelt_cursor"
+}, {
+	"name": "radieschen",
+	"info": "info_00",
+	"openIcon": "0201/radieschen",
+	"description": "desc_00",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "0201/radieschen_cursor"
+}, {
+	"name": "pfeffer",
+	"info": "info_25",
+	"openIcon": "common/pfeffer",
+	"description": "desc_25",
+	"cursorBitmap": "common/pfeffer_cursor"
+}, {
+	"name": "schaleFuerRadieschen",
+	"info": "info_04",
+	"customPositionOffsetMouse": "17 40",
+	"openIcon": "common/schuessel_rot",
+	"description": "desc_04",
+	"hoverBitmap": "schuessel_rot",
+	"unopenedToOpen": "1",
+	"customExtentOffsetMouse": "-34 -80",
+	"openPosition": "countertopLeftTop"
+}, {
+	"name": "radieschenHalbiert",
+	"info": "info_03",
+	"openIcon": "0201/radieschenHalbiert",
+	"description": "desc_03",
+	"cursorBitmap": "0201/radieschenHalbiert_cursor"
+}, {
+	"name": "topfMitFondGewuerzt",
+	"info": "info_26",
+	"cursorHotspot": "90 75",
+	"cursorBitmap": "0201/topfMitFondGewuerzt_cursor",
+	"openPosition": "stoveLeftTop",
+	"hoverBitmap": "topf1",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "0201/topfMitFondGewuerzt",
+	"donePosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_26"
+}, {
+	"name": "tellerFertig",
+	"info": "info_32",
+	"openIcon": "0201/tellerFertig",
+	"description": "desc_32",
+	"openPosition": "countertopRightBottom"
+}, {
+	"name": "butter",
+	"info": "info_13",
+	"openIcon": "common/butter",
+	"description": "desc_13",
+	"cursorBitmap": "common/butter_cursor"
+}, {
+	"name": "zwiebelnGeschaelt",
+	"info": "info_09",
+	"openIcon": "common/zwiebelAbgezogen",
+	"description": "desc_09",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/zwiebelAbgezogen_cursor"
+}, {
+	"name": "topfMitButterFertig",
+	"info": "info_14",
+	"customPositionOffsetMouse": "20 33",
+	"openSound": "pfanneBrutzeln1",
+	"description": "desc_14",
+	"hoverBitmap": "topf1",
+	"openIcon": "common/topf1_dampf",
+	"customExtentOffsetMouse": "-40 -65",
+	"openPosition": "stoveLeftTop"
+}, {
+	"name": "topfMitFondFertig",
+	"info": "info_27",
+	"cursorHotspot": "23 86",
+	"customPositionOffsetMouse": "20 33",
+	"feedback": "feed_01",
+	"hoverBitmap": "topf1",
+	"description": "desc_27",
+	"openIcon": "0201/topfMitFondFertig2",
+	"donePosition": "stoveLeftTop",
+	"speech": "0201_feedback_01",
+	"openPosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"cursorBitmap": "0201/topfMitFondFertig2_cursor"
+}, {
+	"name": "topfMitButter",
+	"info": "info_12",
+	"activeTime": "5",
+	"activeToDone": "0",
+	"hoverBitmap": "topf1",
+	"activePosition": "stoveLeftTop",
+	"openIcon": "common/topf1_dampf",
+	"activeSound": "pfanneBrutzeln1",
+	"customPositionOffsetMouse": "20 33",
+	"openPosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_12"
+}, {
+	"name": "meerrettich",
+	"info": "info_28",
+	"openIcon": "common/meerrettich",
+	"description": "desc_28",
+	"canHaveAlternativeDonePosition": "1",
+	"cursorBitmap": "common/meerrettich_cursor"
+}, {
+	"name": "topfMitFondGekocht",
+	"info": "info_23a",
+	"cursorHotspot": "90 75",
+	"cursorBitmap": "0201/topfMitFond_cursor",
+	"openPosition": "stoveLeftTop",
+	"hoverBitmap": "topf1",
+	"customPositionOffsetMouse": "20 33",
+	"openIcon": "0201/topfMitFondFertig",
+	"donePosition": "stoveLeftTop",
+	"customExtentOffsetMouse": "-40 -65",
+	"description": "desc_23a"
+}, {
+	"name": "radieschenGeputzt",
+	"info": "info_02",
+	"openIcon": "0201/radieschenGeputztUngewaschen",
+	"description": "desc_02",
+	"cursorBitmap": "0201/radieschenGeputztUngewaschen_cursor"
+}, {
+	"name": "meerrettichGerieben",
+	"info": "info_33",
+	"openIcon": "common/meerrettichGerieben",
+	"description": "desc_33",
+	"cursorBitmap": "common/meerrettichGerieben_cursor"
+}, {
+	"name": "salz",
+	"info": "info_07",
+	"openIcon": "common/salz",
+	"description": "desc_07",
+	"cursorBitmap": "common/salz_cursor"
+}, {
+	"name": "essig",
+	"info": "info_18",
+	"cursorHotspot": "20 20",
+	"openIcon": "common/essig",
+	"description": "desc_18",
+	"cursorBitmap": "common/essig_cursor"
+}
+], "transitions": [{
+	"name": "transition (auto8)",
+	"parent": "topfMitZwiebelnRadieschenFertig",
+	"child": "topfMitFond",
+	"lob": "2",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto12)",
+	"parent": "topfMitFond",
+	"child": "topfMitFondGekocht",
+	"automatic": "1"
+}, {
+	"name": "transition (teilen0)",
+	"parent": "radieschenGewaschen",
+	"child": "radieschenHalbiert",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (move8)",
+	"parent": "pfeffer",
+	"child": "topfMitFondPueriert",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0201/additive_pfeffer"
+}, {
+	"name": "transition (schaelen0)",
+	"parent": "zwiebeln",
+	"child": "zwiebelnGeschaelt",
+	"sound": "knoblauchAbziehen",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (auto10)",
+	"parent": "tellerFuerRettich",
+	"child": "tellerMitRettich",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto7)",
+	"parent": "topfMitZwiebelnRadieschen",
+	"child": "topfMitZwiebelnRadieschenFertig",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (move10)",
+	"parent": "meerrettichGerieben",
+	"child": "tellerFuerRettich",
+	"sound": "zutatPulvrig"
+}, {
+	"name": "transition (auto3)",
+	"parent": "topfMitButter",
+	"child": "topfMitButterFertig",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto5)",
+	"parent": "topfMitZwiebeln",
+	"child": "topfMitZwiebelnFertig",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto1)",
+	"parent": "schaleMitRadieschen",
+	"child": "schaleMitRadieschenZitrone",
+	"lob": "2",
+	"automatic": "1"
+}, {
+	"name": "transition (puerieren0)",
+	"parent": "topfMitFondGekocht",
+	"child": "topfMitFondPueriert",
+	"minigameMaxScore": "35",
+	"mandatory": "1",
+	"tool": "puerierstab",
+	"minigameAction": "circleNegative",
+	"minigamePosition": "stoveLeftTop",
+	"minigameMaxTime": "10"
+}, {
+	"name": "transition (umruehren0)",
+	"parent": "topfMitFondGewuerzt",
+	"child": "topfMitFondFertig",
+	"tool": "loeffel",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "10",
+	"minigamePosition": "stoveLeftTop",
+	"minigameMaxScore": "35"
+}, {
+	"name": "transition (move7)",
+	"parent": "salz",
+	"child": "topfMitFondPueriert",
+	"sound": "gewuerzmuehle",
+	"additiveOpenIcon": "0201/additive_salz"
+}, {
+	"name": "transition (move3)",
+	"parent": "schaleMitRadieschenZitrone",
+	"child": "topfMitZwiebelnFertig",
+	"sound": "zutatFruechte"
+}, {
+	"name": "transition (betraeufeln0)",
+	"parent": "zitronensaft",
+	"child": "schaleMitRadieschen",
+	"sound": "zutatFluessig",
+	"lob": "2"
+}, {
+	"name": "transition (auto9)",
+	"parent": "topfMitFondPueriert",
+	"child": "topfMitFondGewuerzt",
+	"automatic": "1"
+}, {
+	"name": "transition (auto4)",
+	"parent": "topfMitButterFertig",
+	"child": "topfMitZwiebeln",
+	"automatic": "1"
+}, {
+	"name": "transition (move5)",
+	"parent": "sahne",
+	"child": "topfMitZwiebelnRadieschenFertig",
+	"sound": "abloeschen",
+	"additiveOpenIcon": "0201/additive_sahne"
+}, {
+	"name": "transition (move9)",
+	"parent": "topfMitFondFertig",
+	"child": "tellerMitRettich",
+	"sound": "zutatFluessig",
+	"lob": "2"
+}, {
+	"name": "transition (auto11)",
+	"parent": "tellerMitRettich",
+	"child": "tellerFertig",
+	"automatic": "1"
+}, {
+	"name": "transition (schaelen1)",
+	"parent": "meerrettich",
+	"child": "meerrettichGeschaelt",
+	"tool": "schaeler",
+	"minigameAction": "leftRight",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (auto6)",
+	"parent": "topfMitZwiebelnFertig",
+	"child": "topfMitZwiebelnRadieschen",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto0)",
+	"parent": "schaleFuerRadieschen",
+	"child": "schaleMitRadieschen",
+	"mandatory": "1",
+	"automatic": "1"
+}, {
+	"name": "transition (auto2)",
+	"parent": "topfFuerZwiebeln",
+	"child": "topfMitButter",
+	"automatic": "1"
+}, {
+	"name": "transition (move4)",
+	"parent": "essig",
+	"child": "topfMitZwiebelnRadieschen",
+	"sound": "abloeschen"
+}, {
+	"name": "transition (waschen_00)",
+	"parent": "radieschenGeputzt",
+	"child": "radieschenGewaschen",
+	"tool": "watertap"
+}, {
+	"name": "transition (pressenNeu)",
+	"parent": "zitrone",
+	"child": "zitronensaft",
+	"tool": "presse",
+	"minigameAction": "circleNegative",
+	"minigameMaxTime": "10",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "40"
+}, {
+	"name": "transition (move6)",
+	"parent": "fond",
+	"child": "topfMitZwiebelnRadieschenFertig",
+	"sound": "abloeschen",
+	"additiveOpenIcon": "0201/additive_fond"
+}, {
+	"name": "transition (move2)",
+	"parent": "butter",
+	"child": "topfFuerZwiebeln",
+	"sound": "zutatMatschig"
+}, {
+	"name": "transition (move0)",
+	"parent": "radieschenHalbiert",
+	"child": "schaleFuerRadieschen",
+	"sound": "zutatFruechte"
+}, {
+	"name": "transition (reiben0)",
+	"parent": "meerrettichGeschaelt",
+	"child": "meerrettichGerieben",
+	"tool": "reibe",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}, {
+	"name": "transition (putzen0)",
+	"parent": "radieschen",
+	"child": "radieschenGeputzt",
+	"sound": "gemuesePutzen",
+	"minigameMaxScore": "20",
+	"tool": "messer",
+	"minigameAction": "leftRight",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxTime": "5"
+}, {
+	"name": "transition (move1)",
+	"parent": "zwiebelnGewuerfelt",
+	"child": "topfMitButterFertig",
+	"sound": "zutatFruechte"
+}, {
+	"name": "transition (schneiden0)",
+	"parent": "zwiebelnGeschaelt",
+	"child": "zwiebelnGewuerfelt",
+	"tool": "messer",
+	"minigameAction": "topBottom",
+	"minigameMaxTime": "5",
+	"minigamePosition": "cuttingboard",
+	"minigameMaxScore": "20"
+}
+]}
+
+taskTexts.json:
+{
+	"titles": [
+		{
+			"key" : "desc_00",
+			"value" : "Radieschen"
+		},{
+			"key" : "desc_01",
+			"value" : "Zitronensaft"
+		},{
+			"key" : "desc_01a",
+			"value" : "Zitrone"
+		},{
+			"key" : "desc_02",
+			"value" : "Geputzte Radieschen"
+		},{
+			"key" : "desc_02a",
+			"value" : "Gewaschene Radieschen"
+		},{
+			"key" : "desc_03",
+			"value" : "Halbierte Radieschen"
+		},{
+			"key" : "desc_04",
+			"value" : "Schüssel für halbierte Radieschen"
+		},{
+			"key" : "desc_05",
+			"value" : "Halbierte Radieschen"
+		},{
+			"key" : "desc_06",
+			"value" : "Radieschen mit Zitrone"
+		},{
+			"key" : "desc_07",
+			"value" : "Salz"
+		},{
+			"key" : "desc_08",
+			"value" : "Zwiebeln"
+		},{
+			"key" : "desc_09",
+			"value" : "Geschälte Zwiebeln"
+		},{
+			"key" : "desc_10",
+			"value" : "Gewürfelte Zwiebeln"
+		},{
+			"key" : "desc_11",
+			"value" : "Topf für die Sauce"
+		},{
+			"key" : "desc_12",
+			"value" : "Topf mit Butter"
+		},{
+			"key" : "desc_13",
+			"value" : "Butter"
+		},{
+			"key" : "desc_14",
+			"value" : "Topf mit heißer Butter"
+		},{
+			"key" : "desc_15",
+			"value" : "Topf mit Zwiebeln"
+		},{
+			"key" : "desc_16",
+			"value" : "Topf mit gedünsteten Zwiebeln"
+		},{
+			"key" : "desc_17",
+			"value" : "Topf mit Radieschen"
+		},{
+			"key" : "desc_18",
+			"value" : "Weißer Balsamico-Essig"
+		},{
+			"key" : "desc_20",
+			"value" : "Sahne"
+		},{
+			"key" : "desc_21",
+			"value" : "Gemüsebrühe"
+		},{
+			"key" : "desc_22",
+			"value" : "Topf mit gedünsteten Radieschen"
+		},{
+			"key" : "desc_23",
+			"value" : "Topf mit kochenden Radieschen"
+		},{
+			"key" : "desc_23a",
+			"value" : "Topf mit fertig gekochten Radieschen"
+		},{
+			"key" : "desc_24",
+			"value" : "Topf mit pürierter Suppe"
+		},{
+			"key" : "desc_25",
+			"value" : "Pfeffer"
+		},{
+			"key" : "desc_26",
+			"value" : "Gewürzte Suppe"
+		},{
+			"key" : "desc_27",
+			"value" : "Gewürzte Suppe"
+		},{
+			"key" : "desc_28",
+			"value" : "Frischer Meerrettich"
+		},{
+			"key" : "desc_29",
+			"value" : "Geschälter Meerrettich"
+		},{
+			"key" : "desc_30",
+			"value" : "Teller für die Suppe"
+		},{
+			"key" : "desc_31",
+			"value" : "Teller mit Meerrettich"
+		},{
+			"key" : "desc_32",
+			"value" : "Fertige Suppe"
+		},{
+			"key" : "desc_33",
+			"value" : "Geriebener Meerrettich"
+		}
+	],
+	"descriptions": [
+		{
+			"key" : "info_00",
+			"value" : "Die Radieschen mit dem Messer putzen."
+		},{
+			"key" : "info_01",
+			"value" : "Mit dem Zitronensaft werden die halbierten Radieschen beträufelt."
+		},{
+			"key" : "info_01a",
+			"value" : "Die Zitrone soll ausgepresst werden."
+		},{
+			"key" : "info_02",
+			"value" : "Die Radieschen gründlich waschen."
+		},{
+			"key" : "info_02a",
+			"value" : "Radieschen mit dem Messer halbieren."
+		},{
+			"key" : "info_03",
+			"value" : "Die Radieschen in die rote Schüssel geben."
+		},{
+			"key" : "info_04",
+			"value" : "Für die Radieschenhälften."
+		},{
+			"key" : "info_05",
+			"value" : "Die Radieschen werden mit dem Zitronensaft beträufelt."
+		},{
+			"key" : "info_06",
+			"value" : "Die Radieschenhälften in den Topf mit den Zwiebeln geben."
+		},{
+			"key" : "info_07",
+			"value" : "Zum Würzen der Suppe."
+		},{
+			"key" : "info_08",
+			"value" : "Die Zwiebeln mit dem Messer abziehen."
+		},{
+			"key" : "info_09",
+			"value" : "Die Zwiebeln werden mit dem Messer gewürfelt."
+		},{
+			"key" : "info_10",
+			"value" : "Die gewürfelten Zwiebeln in den Topf mit der heißen Butter geben."
+		},{
+			"key" : "info_11",
+			"value" : "Hier die Butter hineingeben."
+		},{
+			"key" : "info_12",
+			"value" : "Die Butter soll heiß werden."
+		},{
+			"key" : "info_13",
+			"value" : "Die Butter in den Topf geben."
+		},{
+			"key" : "info_14",
+			"value" : "Die Zwiebeln in die heiße Butter geben."
+		},{
+			"key" : "info_15",
+			"value" : "Die Zwiebeln werden angedünstet."
+		},{
+			"key" : "info_16",
+			"value" : "Die beträufelten Radieschen dazugeben."
+		},{
+			"key" : "info_17",
+			"value" : "Mit Essig ablöschen."
+		},{
+			"key" : "info_18",
+			"value" : "Mit dem Essig werden die Radieschen abgelöscht."
+		},{
+			"key" : "info_20",
+			"value" : "Die Sahne wird zu den gedünsteten Radieschen in den Topf gegeben."
+		},{
+			"key" : "info_21",
+			"value" : "Die Gemüsebrühe zu den gedünsteten Radieschen in den Topf geben."
+		},{
+			"key" : "info_22",
+			"value" : "Nun Sahne und Gemüsebrühe hinzugeben."
+		},{
+			"key" : "info_23",
+			"value" : "Zugedeckt bei kleiner Hitze kochen lassen."
+		},{
+			"key" : "info_23a",
+			"value" : "Mit dem Pürierstab pürieren."
+		},{
+			"key" : "info_24",
+			"value" : "Mit Salz und Pfeffer würzen."
+		},{
+			"key" : "info_25",
+			"value" : "Zum Würzen der Suppe."
+		},{
+			"key" : "info_26",
+			"value" : "Die Suppe mit dem Löffel umrühren."
+		},{
+			"key" : "info_27",
+			"value" : "Die Suppe über den Meerrettich in den Teller geben."
+		},{
+			"key" : "info_28",
+			"value" : "Der Meerrettich wird mit dem Schäler geschält."
+		},{
+			"key" : "info_29",
+			"value" : "Den Meerrettich reiben."
+		},{
+			"key" : "info_30",
+			"value" : "Geriebenen Meerrettich auf den Teller geben."
+		},{
+			"key" : "info_31",
+			"value" : "Hier die Suppe hineingießen."
+		},{
+			"key" : "info_33",
+			"value" : "Den geriebenen Meerrettich auf den Teller geben."
+		}
+	],
+	"feedbacks": [
+		{
+			"key" : "feed_00",
+			"value" : "Prima!\nDie Radieschen sind fertig eingelegt.\nSie kommen nun in den Topf\nzu den Zwiebeln."
+		},{
+			"key" : "feed_01",
+			"value" : "Sehr schön!\nDie Suppe ist fertig.\nSie wird über den Meerrettich\ngegossen."
+		}
+	],
+	"additionals": [
+		{
+			"key": "ToolsText",
+			"value": "Hilfsmittel"
+		},
+		{
+			"key": "Text_Tipps",
+			"value": "Sarahs Tips"
+		}
+	],
+	"informations": [
+		{
+			"key" : "info_00",
+			"value" : "radieschen_01"
+		},{
+			"key" : "info_01a",
+			"value" : "zitrone_01"
+		},{
+			"key" : "info_07",
+			"value" : "salz_04"
+		},{
+			"key" : "info_08",
+			"value" : "zwiebeln_01"
+		},{
+			"key" : "info_13",
+			"value" : "butter_02"
+		},{
+			"key" : "info_18",
+			"value" : "balsamicoessig_01"
+		},{
+			"key" : "info_20",
+			"value" : "sahne_01"
+		},{
+			"key" : "info_21",
+			"value" : "gemuesebruehe_01"
+		},{
+			"key" : "info_25",
+			"value" : "pfeffer_01"
+		},{
+			"key" : "info_28",
+			"value" : "meerrettich_01"
+		}
+	]
+}
+
+
+
+
+================================================================================
+RECIPE INPUT:
+================================================================================
+

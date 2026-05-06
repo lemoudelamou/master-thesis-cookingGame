@@ -1,0 +1,251 @@
+YOUR TASK
+Given a recipe, generate TWO JSON files:
+- File 1: process.json (Game Mechanics)
+- File 2: taskTexts.json (Localization – German)
+
+Let's think step by step
+
+================================================================================
+REFERENCE: DATA STRUCTURES
+================================================================================
+
+Use the following two JSON Schemas as the output.
+
+1) PROCESS_JSON_SCHEMA
+- Root object
+- Required: tasks, transitions
+- No additional properties at root
+
+tasks:
+- array of objects
+- required fields: name, info, description, openIcon
+- no additional properties
+- supported optional fields:
+  activeIcon, doneIcon, cursorBitmap, cursorHotspot, CursorHotspot, hoverBitmap,
+  canHaveAlternativeDonePosition, customPositionOffsetMouse, customExtentOffsetMouse,
+  openPosition, donePosition, activePosition,
+  openSound, doneSound, activeSound,
+  activeTime, activeToDone, userMoveActiveToDonePosition, unopenedToOpen,
+  openPreview, speech, feedback
+- openPosition/donePosition/activePosition enum:
+  stoveLeftTop, stoveLeftBottom, stoveRightTop, stoveRightBottom,
+  countertopLeftTop, countertopLeftBottom, countertopRightTop, countertopRightBottom,
+  oven, cuttingboard
+- binary flags are strings matching ^[01]$
+- numeric values are stored as strings matching ^[0-9]+$
+
+transitions:
+- array of objects
+- required fields: name, parent, child
+- no additional properties
+- optional fields:
+  tool, sound, automatic, mandatory, lob,
+  minigameAction, minigameMaxTime, minigamePosition, minigameMaxScore,
+  additiveOpenIcon
+- binary flags are strings matching ^[01]$
+- numeric values are stored as strings matching ^[0-9]+$
+
+2) TASKS_TEXT_JSON_SCHEMA
+- Root object
+- Required: titles, descriptions, informations, feedbacks, additionals
+- No additional properties at root
+
+titles: Short names/labels for each task, referenced by description keys 
+- array of { key, value }
+- key pattern: ^desc_[0-9]+[a-zA-Z]*$
+
+descriptions: Detailed instructions for each task, referenced by info keys
+- array of { key, value }
+- key pattern: ^info_[0-9]+[a-zA-Z]*$
+
+informations: Positive reinforcement messages shown when completing significant steps,
+referenced by feedback keys
+- array of { key, value }
+- key pattern: ^info_[0-9]+[a-zA-Z]*$
+
+feedbacks: References to ingredients
+- array of { key, value }
+- key pattern: ^feed_[0-9]+[a-zA-Z]*$
+
+additionals: Display tips.
+- array of { key, value }
+- any string key allowed
+
+Return valid JSON only.
+
+================================================================================
+PHASE 1: ANALYZE THE RECIPE (MANDATORY – STEP BY STEP)
+================================================================================
+
+STEP 1A: RECIPE BREAKDOWN
+
+List each recipe step with explicit analysis.
+
+For each recipe step, use this structure:
+
+Recipe Step [N]: [exact text from recipe]
+
+Required Player Actions:
+- [ ] Action 1
+- [ ] Action 2
+
+Ingredients Involved:
+- Ingredient A (initial state: X, final state: Y)
+- Ingredient B (initial state: X, final state: Y)
+
+Task Sequence Required:
+1. Task name: [camelCase task name] (reason: [why this task is needed])
+2. Task name: [camelCase task name] (reason: [why this task is needed])
+
+Transitions Required:
+1. [parent task] → [child task] (type: manual/auto, reason: [why])
+2. [parent task] → [child task] (type: manual/auto, reason: [why])
+
+
+STEP 1B: TASK INVENTORY
+
+Create a complete inventory of all tasks needed.
+
+For each task, use this structure:
+
+[camelCase task name]
+- Purpose: [what this represents in the recipe]
+- Required task fields (only fields allowed by PROCESS_JSON_SCHEMA):
+  * name: [camelCase value] — [reason]
+  * info: [info_XX value or omitted] — [reason]
+  * description: [desc_XX value or omitted] — [reason]
+  * openIcon: [value] — [reason]
+  * activeIcon: [value or omitted] — [reason]
+  * doneIcon: [value or omitted] — [reason]
+  * cursorBitmap: [value or omitted] — [reason]
+  * cursorHotspot: [value or omitted] — [reason]
+  * CursorHotspot: [value or omitted] — [reason]
+  * hoverBitmap: [value or omitted] — [reason]
+  * canHaveAlternativeDonePosition: [value or omitted] — [reason]
+  * customPositionOffsetMouse: [value or omitted] — [reason]
+  * customExtentOffsetMouse: [value or omitted] — [reason]
+  * openPosition: [value or omitted] — [reason]
+  * donePosition: [value or omitted] — [reason]
+  * activePosition: [value or omitted] — [reason]
+  * openSound: [value or omitted] — [reason]
+  * doneSound: [value or omitted] — [reason]
+  * activeSound: [value or omitted] — [reason]
+  * activeTime: [value or omitted] — [reason: include only for timed active states]
+  * activeToDone: [value or omitted] — [reason]
+  * userMoveActiveToDonePosition: [value or omitted] — [reason]
+  * unopenedToOpen: [value or omitted] — [reason]
+  * openPreview: [value or omitted] — [reason]
+  * speech: [value or omitted] — [reason]
+  * feedback: [feed_XX value or omitted] — [reason]
+- Appears in recipe steps: [step numbers]
+- Role in transitions: [as parent: X times, as child: Y times]
+
+
+STEP 1C: TRANSITION INVENTORY
+
+Create a complete inventory of all transitions needed.
+
+For each transition, use this structure:
+
+[transition name]
+- parent: [camelCase task name]
+- child: [camelCase task name]
+- Purpose: [what cooking/preparation action this represents]
+- Required transition fields (only fields allowed by PROCESS_JSON_SCHEMA):
+  * name: [value] — [reason]
+  * parent: [value] — [reason]
+  * child: [value] — [reason]
+  * tool: [value or omitted] — [reason]
+  * sound: [value or omitted] — [reason]
+  * automatic: [value or omitted] — [reason: use "1" only if no player action is needed]
+  * mandatory: [value or omitted] — [reason]
+  * lob: [value or omitted] — [reason]
+  * minigameAction: [value or omitted] — [reason]
+  * minigameMaxTime: [value or omitted] — [reason]
+  * minigamePosition: [value or omitted] — [reason]
+  * minigameMaxScore: [value or omitted] — [reason]
+  * additiveOpenIcon: [value or omitted] — [reason]
+- Appears in recipe steps: [step numbers]
+
+
+STEP 1D: TASK TEXTS PLANNING
+
+Map each task to its text entries using TASKS_TEXT_JSON_SCHEMA exactly.
+
+For each task, use this structure:
+
+Task: [camelCase task name]
+- titles entry:
+  * key: desc_XX
+  * value: "[short German label]"
+- descriptions entry:
+  * key: info_XX
+  * value: "[detailed German instruction in imperative mood]"
+- informations entry:
+  * key: info_XX
+  * value: "[reference value / ingredient label / internal information value, in German if user-facing]"
+- feedbacks entry (only if needed):
+  * key: feed_XX
+  * value: "[positive German reinforcement message]"
+- additionals entry (only if needed):
+  * key: [string key]
+  * value: "[German tip or UI text]"
+
+STEP 1E: VALIDATE COMPLETENESS
+Check that every recipe step is fully covered:
+- [ ] Step 1: covered by tasks [list] and transitions [list]
+- [ ] Step 2: covered by tasks [list] and transitions [list]
+- [ ] All tasks have corresponding taskTexts entries (desc_XX and info_XX)
+- [ ] All feedback keys referenced in tasks exist in taskTexts feedbacks array
+- [ ] All timed tasks have activeTime set and appropriate activeToDone value
+- [ ] All combination steps have appropriate additiveOpenIcon in their transition
+- [ ] No orphan tasks (every task participates in at least one transition, or is a final result)
+
+================================================================================
+PHASE 2: GENERATE JSON FILES
+================================================================================
+
+STEP 2A: Generate process.json
+- Follow the exact structure described in the PROCESS STRUCTURE reference above
+- Include only the fields that are relevant for each task/transition (omit fields that have no applicable value)
+- Justify every included field in your analysis (Phase 1) before writing it here
+- All values must be in German
+- Use camelCase for value names
+
+STEP 2B: Generate taskTexts.json
+- Follow the exact structure described in the TASKTEXTS STRUCTURE reference above
+- Use sequential zero-padded numbering for all keys (info_00, info_01, desc_00, desc_01, feed_00, ...)
+- Write all content in clear, imperative German
+- Titles (desc_XX): short and noun-based (e.g. "Tomaten waschen")
+- Descriptions (info_XX): action-oriented full sentences (e.g. "Wasche die Tomaten unter fließendem Wasser ab.")
+- Feedbacks (feed_XX): positive and encouraging (e.g. "Super! Die Soße ist fertig.")
+
+================================================================================
+OUTPUT ORDER (STRICT)
+================================================================================
+
+1. **RECIPE BREAKDOWN** (from Step 1A)
+2. **TASK INVENTORY** (from Step 1B)
+3. **TRANSITION INVENTORY** (from Step 1C)
+4. **TASKTEXTS PLANNING** (from Step 1D)
+5. **VALIDATION CHECKLIST** (from Step 1E)
+6. **process.json** (complete file)
+7. **taskTexts.json** (complete file)
+
+================================================================================
+CRITICAL RULES
+================================================================================
+
+- NEVER skip the analysis phases
+- NEVER generate JSON without showing your reasoning
+- NEVER assume - if uncertain about a pattern, state it explicitly
+- ALWAYS validate that every recipe step is covered
+- ALWAYS explain WHY you chose manual vs. auto transitions
+- ALWAYS explain WHY you included specific fields in tasks
+- ALWAYS wrap each JSON file in a ```json ... ``` code fence. Never output raw JSON 
+  outside of a fence. Never add text or commentary between or after the fences.
+
+================================================================================
+RECIPE INPUT:
+================================================================================
+
