@@ -17,7 +17,6 @@ from config.config import (
     TASKS_TEXT_JSON_SCHEMA,
 )
 
-
 # ── Load .env ──────────────────────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(SCRIPT_DIR, ".env"))
@@ -112,7 +111,7 @@ def inject_recipe(prompt_text: str, recipe_text: str) -> str:
 def run_conversion(
     api_key, full_prompt, recipe_name, model, system_message, temperature=0.0
 ):
-    client = OpenAI(api_key=api_key)
+    client = client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     start = time.time()
 
     response = client.chat.completions.create(
